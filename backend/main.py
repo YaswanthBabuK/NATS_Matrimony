@@ -12,8 +12,8 @@ app = FastAPI(title="NATS Matrimony API", version="1.0.0")
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://nats-matrimony.vercel.app",   # production Vercel URL
-    os.getenv("FRONTEND_URL", ""),         # override via env var if needed
+    "https://frontend-navy-xi-82.vercel.app",   # production Vercel URL
+    os.getenv("FRONTEND_URL", ""),               # override via env var if needed
 ]
 
 app.add_middleware(
