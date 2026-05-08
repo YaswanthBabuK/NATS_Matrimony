@@ -214,6 +214,7 @@ def list_profiles(
     gender: Optional[str] = None,
     age_min: Optional[int] = Query(None, ge=18),
     age_max: Optional[int] = None,
+    city: Optional[str] = None,
     state: Optional[str] = None,
     education: Optional[str] = None,
     profession: Optional[str] = None,
@@ -246,6 +247,8 @@ def list_profiles(
         query = query.filter(Profile.age >= age_min)
     if age_max is not None:
         query = query.filter(Profile.age <= age_max)
+    if city:
+        query = query.filter(Profile.current_city.ilike(f"%{city}%"))
     if state:
         query = query.filter(Profile.current_state.ilike(f"%{state}%"))
     if education:
