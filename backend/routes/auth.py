@@ -16,6 +16,18 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+# ── passlib/bcrypt compatibility fix ─────────────────────────────────────────
+# passlib 1.7.4 reads bcrypt.__about__.__version__ which was removed in bcrypt 4.x.
+# Monkey-patch it so passlib doesn't crash on import.
+try:
+    import bcrypt as _bcrypt_mod
+    if not hasattr(_bcrypt_mod, "__about__"):
+        class _About:
+            __version__ = getattr(_bcrypt_mod, "__version__", "4.0.1")
+        _bcrypt_mod.__about__ = _About()
+except Exception:
+    pass
+
 from database import get_db
 from email_utils import send_welcome_email
 from models import Preference, Profile
