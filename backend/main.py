@@ -1,11 +1,16 @@
 import os
+import random
+import traceback
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
-from database import Base, engine
+from database import Base, engine, SessionLocal
+from models import Profile, Preference
 from routes import auth, interests, matches, notifications, profiles, webhooks, wishlists
+from routes.auth import hash_password
 
 app = FastAPI(title="NATS Matrimony API", version="1.0.0")
 
@@ -25,9 +30,6 @@ app.add_middleware(
 )
 
 # ── Static files ─────────────────────────────────────────────────────────────
-# Serve uploaded images (profile photos) at /uploads/...
-# Make sure the folder exists before mounting so StaticFiles doesn't error out
-# on a fresh checkout.
 UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(os.path.join(UPLOADS_DIR, "profiles"), exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
@@ -37,9 +39,6 @@ app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 def startup():
     Base.metadata.create_all(bind=engine)
 
-    # ── Safe column migrations (ADD COLUMN IF NOT EXISTS) ────────────────────
-    # New columns added after the initial table creation won't be created by
-    # create_all, so we run idempotent ALTER TABLE statements on every startup.
     from sqlalchemy import text
     profile_cols = [
         ("date_of_birth", "VARCHAR"),
@@ -87,91 +86,90 @@ def root():
 
 
 @app.get("/api/seed")
-def seed_database(token: str = ""):
+def seed_database(token: str = Query(default="")):
     """One-time seed endpoint — protected by SEED_TOKEN env var."""
-    import random
-    from database import SessionLocal
-    from models import Profile, Preference
-    from routes.auth import hash_password
-
-    expected = os.getenv("SEED_TOKEN", "")
-    if not expected or token != expected:
-        from fastapi import HTTPException
-        raise HTTPException(status_code=403, detail="Forbidden")
-
-    db = SessionLocal()
     try:
-        if db.query(Profile).count() >= 10:
-            return {"message": "Already seeded", "count": db.query(Profile).count()}
+        expected = os.getenv("SEED_TOKEN", "")
+        if not expected or token != expected:
+            return JSONResponse(status_code=403, content={"detail": "Forbidden"})
 
-        first_names_m = ["Arjun", "Kiran", "Vikram", "Rahul", "Suresh", "Anil", "Deepak", "Ravi", "Sanjay", "Manoj",
-                         "Ajay", "Vinay", "Naresh", "Ramesh", "Ganesh", "Sunil", "Rajesh", "Praveen", "Santosh", "Harish"]
-        first_names_f = ["Priya", "Anjali", "Divya", "Pooja", "Swathi", "Lakshmi", "Kavya", "Sneha", "Sruthi", "Manasa",
-                         "Padma", "Sunita", "Rekha", "Usha", "Anitha", "Lavanya", "Bhavana", "Sirisha", "Madhuri", "Aparna"]
-        last_names    = ["Reddy", "Sharma", "Rao", "Kumar", "Naidu", "Chandra", "Varma", "Goud", "Prasad", "Raju"]
-        cities        = ["Hyderabad", "Vijayawada", "Visakhapatnam", "Tirupati", "Warangal", "Guntur", "Nellore", "Kurnool"]
-        educations    = ["B.Tech", "M.Tech", "MBA", "MBBS", "B.Com", "M.Sc", "B.Sc", "CA"]
-        professions   = ["Software Engineer", "Doctor", "Teacher", "Business", "Government Employee", "Banker", "Lawyer"]
-        castes        = ["Kamma", "Reddy", "Kapu", "Brahmin", "Velama", "Yadav"]
+        db = SessionLocal()
+        try:
+            existing = db.query(Profile).count()
+            if existing >= 10:
+                return {"message": "Already seeded", "count": existing}
 
-        # Hash once and reuse — bcrypt is intentionally slow, hashing 50x on
-        # a 0.1-CPU free instance would timeout otherwise.
-        hashed_pw = hash_password("Test@1234")
+            first_names_m = ["Arjun", "Kiran", "Vikram", "Rahul", "Suresh", "Anil", "Deepak", "Ravi",
+                             "Sanjay", "Manoj", "Ajay", "Vinay", "Naresh", "Ramesh", "Ganesh",
+                             "Sunil", "Rajesh", "Praveen", "Santosh", "Harish"]
+            first_names_f = ["Priya", "Anjali", "Divya", "Pooja", "Swathi", "Lakshmi", "Kavya", "Sneha",
+                             "Sruthi", "Manasa", "Padma", "Sunita", "Rekha", "Usha", "Anitha",
+                             "Lavanya", "Bhavana", "Sirisha", "Madhuri", "Aparna"]
+            last_names  = ["Reddy", "Sharma", "Rao", "Kumar", "Naidu", "Chandra", "Varma", "Goud", "Prasad", "Raju"]
+            cities      = ["Hyderabad", "Vijayawada", "Visakhapatnam", "Tirupati", "Warangal", "Guntur"]
+            educations  = ["B.Tech", "M.Tech", "MBA", "MBBS", "B.Com", "M.Sc", "B.Sc", "CA"]
+            professions = ["Software Engineer", "Doctor", "Teacher", "Business", "Government Employee", "Banker"]
+            castes      = ["Kamma", "Reddy", "Kapu", "Brahmin", "Velama", "Yadav"]
 
-        profiles_added = 0
-        for i in range(50):
-            gender   = "Male" if i < 25 else "Female"
-            fname    = random.choice(first_names_m if gender == "Male" else first_names_f)
-            lname    = random.choice(last_names)
-            age      = random.randint(22, 38)
-            dob_year = 2026 - age
-            city     = random.choice(cities)
-            email    = f"{fname.lower()}.{lname.lower()}{i}@example.com"
+            # Hash once and reuse — bcrypt is slow; hashing 50x on 0.1-CPU would timeout
+            hashed_pw = hash_password("Test@1234")
 
-            if db.query(Profile).filter(Profile.email == email).first():
-                continue
+            profiles_added = 0
+            for i in range(50):
+                gender   = "Male" if i < 25 else "Female"
+                fname    = random.choice(first_names_m if gender == "Male" else first_names_f)
+                lname    = random.choice(last_names)
+                age      = random.randint(22, 38)
+                city     = random.choice(cities)
+                email    = f"{fname.lower()}.{lname.lower()}{i}@example.com"
 
-            p = Profile(
-                email             = email,
-                password_hash     = hashed_pw,
-                full_name         = f"{fname} {lname}",
-                gender            = gender,
-                age               = age,
-                date_of_birth     = f"{dob_year}-06-15",
-                height            = f"{random.randint(155, 185)} cm",
-                caste             = random.choice(castes),
-                mother_tongue     = "Telugu",
-                education         = random.choice(educations),
-                profession        = random.choice(professions),
-                current_city      = city,
-                marital_status    = "Never Married",
-                about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {city}. Looking for a life partner.",
-                profile_photo_url = None,
-            )
-            db.add(p)
-            db.flush()
+                if db.query(Profile).filter(Profile.email == email).first():
+                    continue
 
-            opp_gender = "Female" if gender == "Male" else "Male"
-            pref = Preference(
-                profile_id            = p.profile_id,
-                pref_gender           = opp_gender,
-                pref_age_min          = age - 5,
-                pref_age_max          = age + 5,
-                pref_height_min       = "155 cm",
-                pref_height_max       = "185 cm",
-                pref_education        = random.choice(educations),
-                pref_profession       = random.choice(professions),
-                pref_location         = random.choice(cities),
-                pref_marital_statuses = "Never Married",
-            )
-            db.add(pref)
-            profiles_added += 1
+                p = Profile(
+                    email             = email,
+                    password_hash     = hashed_pw,
+                    full_name         = f"{fname} {lname}",
+                    gender            = gender,
+                    age               = age,
+                    date_of_birth     = f"{2026 - age}-06-15",
+                    height            = f"{random.randint(155, 185)} cm",
+                    caste             = random.choice(castes),
+                    mother_tongue     = "Telugu",
+                    education         = random.choice(educations),
+                    profession        = random.choice(professions),
+                    current_city      = city,
+                    marital_status    = "Never Married",
+                    about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {city}.",
+                    profile_photo_url = None,
+                )
+                db.add(p)
+                db.flush()
 
-        db.commit()
-        return {"message": "Seeded successfully", "added": profiles_added, "total": db.query(Profile).count()}
-    except Exception as e:
-        db.rollback()
-        import traceback
-        return {"error": str(e), "trace": traceback.format_exc()}
-    finally:
-        db.close()
+                pref = Preference(
+                    profile_id            = p.profile_id,
+                    pref_gender           = "Female" if gender == "Male" else "Male",
+                    pref_age_min          = age - 5,
+                    pref_age_max          = age + 5,
+                    pref_height_min       = "155 cm",
+                    pref_height_max       = "185 cm",
+                    pref_education        = random.choice(educations),
+                    pref_profession       = random.choice(professions),
+                    pref_location         = random.choice(cities),
+                    pref_marital_statuses = "Never Married",
+                )
+                db.add(pref)
+                profiles_added += 1
+
+            db.commit()
+            total = db.query(Profile).count()
+            return {"message": "Seeded successfully", "added": profiles_added, "total": total}
+
+        except Exception as e:
+            db.rollback()
+            return JSONResponse(status_code=500, content={"error": str(e), "trace": traceback.format_exc()})
+        finally:
+            db.close()
+
+    except Exception as outer_e:
+        return JSONResponse(status_code=500, content={"error": str(outer_e), "trace": traceback.format_exc()})
