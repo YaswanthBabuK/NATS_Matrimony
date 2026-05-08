@@ -126,10 +126,17 @@ def seed_database(token: str = Query(default="")):
                 if db.query(Profile).filter(Profile.email == email).first():
                     continue
 
+                full_name = f"{fname} {lname}"
+                # Use UI Avatars for instant, permanent photo URLs — no upload needed
+                bg = "e8b4b8" if gender == "Female" else "b4c8e8"
+                avatar_url = (
+                    f"https://ui-avatars.com/api/?name={fname}+{lname}"
+                    f"&size=400&background={bg}&color=fff&bold=true&rounded=true"
+                )
                 p = Profile(
                     email             = email,
                     password_hash     = hashed_pw,
-                    full_name         = f"{fname} {lname}",
+                    full_name         = full_name,
                     gender            = gender,
                     age               = age,
                     date_of_birth     = f"{2026 - age}-06-15",
@@ -141,7 +148,7 @@ def seed_database(token: str = Query(default="")):
                     current_city      = city,
                     marital_status    = "Never Married",
                     about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {city}.",
-                    profile_photo_url = None,
+                    profile_photo_url = avatar_url,
                 )
                 db.add(p)
                 db.flush()
@@ -173,3 +180,35 @@ def seed_database(token: str = Query(default="")):
 
     except Exception as outer_e:
         return JSONResponse(status_code=500, content={"error": str(outer_e), "trace": traceback.format_exc()})
+
+
+@app.get("/api/fix-photos")
+def fix_seed_photos(token: str = Query(default="")):
+    """Backfill UI-Avatar photo URLs for any seeded profiles missing a photo."""
+    try:
+        expected = os.getenv("SEED_TOKEN", "")
+        if not expected or token != expected:
+            return JSONResponse(status_code=403, content={"detail": "Forbidden"})
+
+        db = SessionLocal()
+        try:
+            profiles = db.query(Profile).filter(Profile.profile_photo_url == None).all()
+            updated = 0
+            for p in profiles:
+                fname = p.full_name.split()[0] if p.full_name else "User"
+                lname = p.full_name.split()[-1] if p.full_name and len(p.full_name.split()) > 1 else ""
+                bg = "e8b4b8" if p.gender == "Female" else "b4c8e8"
+                p.profile_photo_url = (
+                    f"https://ui-avatars.com/api/?name={fname}+{lname}"
+                    f"&size=400&background={bg}&color=fff&bold=true&rounded=true"
+                )
+                updated += 1
+            db.commit()
+            return {"message": "Photos fixed", "updated": updated}
+        except Exception as e:
+            db.rollback()
+            return JSONResponse(status_code=500, content={"error": str(e)})
+        finally:
+            db.close()
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
