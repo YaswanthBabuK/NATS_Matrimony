@@ -114,6 +114,10 @@ def seed_database(token: str = ""):
         professions   = ["Software Engineer", "Doctor", "Teacher", "Business", "Government Employee", "Banker", "Lawyer"]
         castes        = ["Kamma", "Reddy", "Kapu", "Brahmin", "Velama", "Yadav"]
 
+        # Hash once and reuse — bcrypt is intentionally slow, hashing 50x on
+        # a 0.1-CPU free instance would timeout otherwise.
+        hashed_pw = hash_password("Test@1234")
+
         profiles_added = 0
         for i in range(50):
             gender   = "Male" if i < 25 else "Female"
@@ -121,6 +125,7 @@ def seed_database(token: str = ""):
             lname    = random.choice(last_names)
             age      = random.randint(22, 38)
             dob_year = 2026 - age
+            city     = random.choice(cities)
             email    = f"{fname.lower()}.{lname.lower()}{i}@example.com"
 
             if db.query(Profile).filter(Profile.email == email).first():
@@ -128,7 +133,7 @@ def seed_database(token: str = ""):
 
             p = Profile(
                 email             = email,
-                password_hash     = hash_password("Test@1234"),
+                password_hash     = hashed_pw,
                 full_name         = f"{fname} {lname}",
                 gender            = gender,
                 age               = age,
@@ -138,16 +143,18 @@ def seed_database(token: str = ""):
                 mother_tongue     = "Telugu",
                 education         = random.choice(educations),
                 profession        = random.choice(professions),
-                current_city      = random.choice(cities),
+                current_city      = city,
                 marital_status    = "Never Married",
-                about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {random.choice(cities)}. Looking for a life partner.",
+                about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {city}. Looking for a life partner.",
                 profile_photo_url = None,
             )
             db.add(p)
             db.flush()
 
+            opp_gender = "Female" if gender == "Male" else "Male"
             pref = Preference(
                 profile_id            = p.profile_id,
+                pref_gender           = opp_gender,
                 pref_age_min          = age - 5,
                 pref_age_max          = age + 5,
                 pref_height_min       = "155 cm",
@@ -164,6 +171,7 @@ def seed_database(token: str = ""):
         return {"message": "Seeded successfully", "added": profiles_added, "total": db.query(Profile).count()}
     except Exception as e:
         db.rollback()
-        raise
+        import traceback
+        return {"error": str(e), "trace": traceback.format_exc()}
     finally:
         db.close()
