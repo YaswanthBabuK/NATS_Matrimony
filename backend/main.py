@@ -182,6 +182,35 @@ def seed_database(token: str = Query(default="")):
         return JSONResponse(status_code=500, content={"error": str(outer_e), "trace": traceback.format_exc()})
 
 
+@app.get("/api/test-accounts")
+def test_accounts(token: str = Query(default="")):
+    """List all seeded test account emails (protected by SEED_TOKEN)."""
+    try:
+        expected = os.getenv("SEED_TOKEN", "")
+        if not expected or token != expected:
+            return JSONResponse(status_code=403, content={"detail": "Forbidden"})
+
+        db = SessionLocal()
+        try:
+            profiles = (
+                db.query(Profile.email, Profile.full_name, Profile.gender)
+                .filter(Profile.email.like("%@example.com"))
+                .order_by(Profile.full_name)
+                .all()
+            )
+            return {
+                "password": "Test@1234",
+                "accounts": [
+                    {"email": p.email, "name": p.full_name, "gender": p.gender}
+                    for p in profiles
+                ],
+            }
+        finally:
+            db.close()
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
 @app.get("/api/fix-photos")
 def fix_seed_photos(token: str = Query(default="")):
     """Backfill UI-Avatar photo URLs for any seeded profiles missing a photo."""
