@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   auth,
@@ -147,11 +147,23 @@ export default function Login() {
     }
   };
 
-  // ── Test accounts (seed data) ─────────────────────────────────────────────
-  const TEST_ACCOUNTS = [
-    { label: "👨 Male",   email: "arjun.reddy@example.com",   password: "password123" },
-    { label: "👩 Female", email: "priya.lakshmi@example.com", password: "password123" },
-  ];
+  // ── Test accounts — fetched live from the API ─────────────────────────────
+  const [testAccounts, setTestAccounts] = useState([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || ""}/api/test-accounts?token=nats2024seed`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.accounts) return;
+        const male   = data.accounts.find(a => a.gender === "Male");
+        const female = data.accounts.find(a => a.gender === "Female");
+        const accounts = [];
+        if (male)   accounts.push({ label: "👨 Male",   ...male,   password: data.password });
+        if (female) accounts.push({ label: "👩 Female", ...female, password: data.password });
+        setTestAccounts(accounts);
+      })
+      .catch(() => {});
+  }, []);
 
   const fillTest = (account) => {
     setEmail(account.email);
@@ -205,22 +217,24 @@ export default function Login() {
             {error && <div className="login-error">{error}</div>}
 
             {/* ── Test credentials ─────────────────────────────────────── */}
-            <div className="login-test-accounts">
-              <p className="login-test-label">🧪 Try a test account</p>
-              <div className="login-test-btns">
-                {TEST_ACCOUNTS.map((acc) => (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    className="login-test-btn"
-                    onClick={() => fillTest(acc)}
-                  >
-                    {acc.label}
-                    <span className="login-test-email">{acc.email}</span>
-                  </button>
-                ))}
+            {testAccounts.length > 0 && (
+              <div className="login-test-accounts">
+                <p className="login-test-label">🧪 Try a test account</p>
+                <div className="login-test-btns">
+                  {testAccounts.map((acc) => (
+                    <button
+                      key={acc.email}
+                      type="button"
+                      className="login-test-btn"
+                      onClick={() => fillTest(acc)}
+                    >
+                      {acc.label}
+                      <span className="login-test-email">{acc.email}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <button
               type="submit"
