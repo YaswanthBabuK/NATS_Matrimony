@@ -116,45 +116,45 @@ def seed_database(token: str = ""):
 
         profiles_added = 0
         for i in range(50):
-            gender = "Male" if i < 25 else "Female"
-            fname  = random.choice(first_names_m if gender == "Male" else first_names_f)
-            lname  = random.choice(last_names)
-            age    = random.randint(22, 38)
-            dob_year = 2024 - age
-            email  = f"{fname.lower()}.{lname.lower()}{i}@example.com"
+            gender   = "Male" if i < 25 else "Female"
+            fname    = random.choice(first_names_m if gender == "Male" else first_names_f)
+            lname    = random.choice(last_names)
+            age      = random.randint(22, 38)
+            dob_year = 2026 - age
+            email    = f"{fname.lower()}.{lname.lower()}{i}@example.com"
 
             if db.query(Profile).filter(Profile.email == email).first():
                 continue
 
             p = Profile(
-                email        = email,
-                password     = hash_password("Test@1234"),
-                name         = f"{fname} {lname}",
-                gender       = gender,
-                age          = age,
-                date_of_birth= f"{dob_year}-06-15",
-                height       = f"{random.randint(155, 185)} cm",
-                caste        = random.choice(castes),
-                mother_tongue= "Telugu",
-                education    = random.choice(educations),
-                profession   = random.choice(professions),
-                location     = random.choice(cities),
-                marital_status= "Never Married",
-                about_me     = f"I am {fname}, a {random.choice(professions).lower()} from {random.choice(cities)}. Looking for a life partner.",
-                photo_url    = None,
+                email             = email,
+                password_hash     = hash_password("Test@1234"),
+                full_name         = f"{fname} {lname}",
+                gender            = gender,
+                age               = age,
+                date_of_birth     = f"{dob_year}-06-15",
+                height            = f"{random.randint(155, 185)} cm",
+                caste             = random.choice(castes),
+                mother_tongue     = "Telugu",
+                education         = random.choice(educations),
+                profession        = random.choice(professions),
+                current_city      = random.choice(cities),
+                marital_status    = "Never Married",
+                about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {random.choice(cities)}. Looking for a life partner.",
+                profile_photo_url = None,
             )
             db.add(p)
             db.flush()
 
             pref = Preference(
-                profile_id         = p.id,
-                pref_age_min       = age - 5,
-                pref_age_max       = age + 5,
-                pref_height_min    = "155 cm",
-                pref_height_max    = "185 cm",
-                pref_education     = random.choice(educations),
-                pref_profession    = random.choice(professions),
-                pref_location      = random.choice(cities),
+                profile_id            = p.profile_id,
+                pref_age_min          = age - 5,
+                pref_age_max          = age + 5,
+                pref_height_min       = "155 cm",
+                pref_height_max       = "185 cm",
+                pref_education        = random.choice(educations),
+                pref_profession       = random.choice(professions),
+                pref_location         = random.choice(cities),
                 pref_marital_statuses = "Never Married",
             )
             db.add(pref)
