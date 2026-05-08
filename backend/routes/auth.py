@@ -12,21 +12,10 @@ from datetime import date
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from passlib.context import CryptContext
-from sqlalchemy.orm import Session
+import bcrypt as _bcrypt_lib
 
-# ── passlib/bcrypt compatibility fix ─────────────────────────────────────────
-# passlib 1.7.4 reads bcrypt.__about__.__version__ which was removed in bcrypt 4.x.
-# Monkey-patch it so passlib doesn't crash on import.
-try:
-    import bcrypt as _bcrypt_mod
-    if not hasattr(_bcrypt_mod, "__about__"):
-        class _About:
-            __version__ = getattr(_bcrypt_mod, "__version__", "4.0.1")
-        _bcrypt_mod.__about__ = _About()
-except Exception:
-    pass
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from sqlalchemy.orm import Session
 
 from database import get_db
 from email_utils import send_welcome_email
@@ -35,21 +24,18 @@ from schemas import LoginResponse, RegisterRequest, RegisterResponse, UserLogin
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-# bcrypt context — single shared instance
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 # Upload directory (same folder that StaticFiles serves from main.py)
 UPLOADS_DIR = Path(__file__).parent.parent / "uploads" / "profiles"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Utilities — imported by other modules (profiles.py, seed.py)
+# Utilities — use bcrypt directly (passlib 1.7.4 is broken with bcrypt 4.x)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def hash_password(plain: str) -> str:
     """Return a bcrypt hash of the given plain-text password."""
-    return _pwd_context.hash(plain)
+    return _bcrypt_lib.hashpw(plain.encode("utf-8"), _bcrypt_lib.gensalt()).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
@@ -57,7 +43,7 @@ def verify_password(plain: str, hashed: str) -> bool:
     if not hashed:
         return False
     try:
-        return _pwd_context.verify(plain, hashed)
+        return _bcrypt_lib.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
     except Exception:
         return False
 
