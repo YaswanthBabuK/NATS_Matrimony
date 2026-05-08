@@ -396,10 +396,9 @@ async def update_photo(
             detail="This photo is already used by another profile. Please upload a different photo."
         )
 
-    suffix = Path(photo.filename).suffix.lower() or ".jpg"
-    dest = UPLOADS_DIR / f"{profile_id}{suffix}"
-    dest.write_bytes(content)
-    profile.profile_photo_url = f"/uploads/profiles/{profile_id}{suffix}"
+    from cloudinary_utils import upload_photo
+    photo_url = upload_photo(content, str(profile_id))
+    profile.profile_photo_url = photo_url
     profile.photo_hash = photo_hash
     db.commit()
     return {"profile_photo_url": profile.profile_photo_url}
