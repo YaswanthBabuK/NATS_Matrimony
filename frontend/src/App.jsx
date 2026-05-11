@@ -36,7 +36,7 @@ function Home() {
     {
       icon: "❤️",
       title: "My Matches",
-      desc: "See profiles handpicked by our matching engine — scored by age, education, location and native place.",
+      desc: "Discover compatible Telugu profiles across North America — ranked by age, education, profession, US state and hometown in India.",
       path: "/matrimony/matches",
     },
     {
