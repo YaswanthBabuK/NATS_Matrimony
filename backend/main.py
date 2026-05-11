@@ -106,7 +106,35 @@ def seed_database(token: str = Query(default="")):
                              "Sruthi", "Manasa", "Padma", "Sunita", "Rekha", "Usha", "Anitha",
                              "Lavanya", "Bhavana", "Sirisha", "Madhuri", "Aparna"]
             last_names  = ["Reddy", "Sharma", "Rao", "Kumar", "Naidu", "Chandra", "Varma", "Goud", "Prasad", "Raju"]
-            cities      = ["Hyderabad", "Vijayawada", "Visakhapatnam", "Tirupati", "Warangal", "Guntur"]
+            # US cities where Telugu diaspora is concentrated, paired with their state
+            us_locations = [
+                ("Houston",      "Texas"),
+                ("Dallas",       "Texas"),
+                ("Austin",       "Texas"),
+                ("San Jose",     "California"),
+                ("Fremont",      "California"),
+                ("San Diego",    "California"),
+                ("Edison",       "New Jersey"),
+                ("Jersey City",  "New Jersey"),
+                ("New York",     "New York"),
+                ("Chicago",      "Illinois"),
+                ("Seattle",      "Washington"),
+                ("Bellevue",     "Washington"),
+                ("Atlanta",      "Georgia"),
+                ("Charlotte",    "North Carolina"),
+                ("Phoenix",      "Arizona"),
+                ("Herndon",      "Virginia"),
+                ("Raleigh",      "North Carolina"),
+                ("Pittsburgh",   "Pennsylvania"),
+                ("Columbus",     "Ohio"),
+                ("Indianapolis", "Indiana"),
+            ]
+            # Indian cities as native place (where they grew up before moving to USA)
+            native_places = [
+                "Hyderabad", "Vijayawada", "Visakhapatnam", "Tirupati",
+                "Warangal", "Guntur", "Karimnagar", "Nellore",
+                "Rajahmundry", "Kakinada", "Anantapur", "Kurnool",
+            ]
             educations  = ["B.Tech", "M.Tech", "MBA", "MBBS", "B.Com", "M.Sc", "B.Sc", "CA"]
             professions = ["Software Engineer", "Doctor", "Teacher", "Business", "Government Employee", "Banker"]
             castes      = ["Kamma", "Reddy", "Kapu", "Brahmin", "Velama", "Yadav"]
@@ -116,12 +144,14 @@ def seed_database(token: str = Query(default="")):
 
             profiles_added = 0
             for i in range(50):
-                gender   = "Male" if i < 25 else "Female"
-                fname    = random.choice(first_names_m if gender == "Male" else first_names_f)
-                lname    = random.choice(last_names)
-                age      = random.randint(22, 38)
-                city     = random.choice(cities)
-                email    = f"{fname.lower()}.{lname.lower()}{i}@example.com"
+                gender      = "Male" if i < 25 else "Female"
+                fname       = random.choice(first_names_m if gender == "Male" else first_names_f)
+                lname       = random.choice(last_names)
+                age         = random.randint(22, 38)
+                us_city, us_state = random.choice(us_locations)
+                native_city = random.choice(native_places)
+                profession  = random.choice(professions)
+                email       = f"{fname.lower()}.{lname.lower()}{i}@example.com"
 
                 if db.query(Profile).filter(Profile.email == email).first():
                     continue
@@ -144,10 +174,12 @@ def seed_database(token: str = Query(default="")):
                     caste             = random.choice(castes),
                     mother_tongue     = "Telugu",
                     education         = random.choice(educations),
-                    profession        = random.choice(professions),
-                    current_city      = city,
+                    profession        = profession,
+                    current_city      = us_city,
+                    current_state     = us_state,
+                    native_place      = native_city,
                     marital_status    = "Never Married",
-                    about_me          = f"I am {fname}, a {random.choice(professions).lower()} from {city}.",
+                    about_me          = f"I am {fname}, a {profession.lower()} based in {us_city}, {us_state}. Originally from {native_city}, India.",
                     profile_photo_url = avatar_url,
                 )
                 db.add(p)
@@ -162,7 +194,7 @@ def seed_database(token: str = Query(default="")):
                     pref_height_max       = "185 cm",
                     pref_education        = random.choice(educations),
                     pref_profession       = random.choice(professions),
-                    pref_location         = random.choice(cities),
+                    pref_location         = random.choice([loc[1] for loc in us_locations]),
                     pref_marital_statuses = "Never Married",
                 )
                 db.add(pref)
@@ -234,6 +266,70 @@ def fix_seed_photos(token: str = Query(default="")):
                 updated += 1
             db.commit()
             return {"message": "Photos fixed", "updated": updated}
+        except Exception as e:
+            db.rollback()
+            return JSONResponse(status_code=500, content={"error": str(e)})
+        finally:
+            db.close()
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@app.get("/api/fix-locations")
+def fix_seed_locations(token: str = Query(default="")):
+    """Backfill US city/state and Indian native_place for all seeded profiles."""
+    try:
+        expected = os.getenv("SEED_TOKEN", "")
+        if not expected or token != expected:
+            return JSONResponse(status_code=403, content={"detail": "Forbidden"})
+
+        us_locations = [
+            ("Houston",      "Texas"),
+            ("Dallas",       "Texas"),
+            ("Austin",       "Texas"),
+            ("San Jose",     "California"),
+            ("Fremont",      "California"),
+            ("San Diego",    "California"),
+            ("Edison",       "New Jersey"),
+            ("Jersey City",  "New Jersey"),
+            ("New York",     "New York"),
+            ("Chicago",      "Illinois"),
+            ("Seattle",      "Washington"),
+            ("Bellevue",     "Washington"),
+            ("Atlanta",      "Georgia"),
+            ("Charlotte",    "North Carolina"),
+            ("Phoenix",      "Arizona"),
+            ("Herndon",      "Virginia"),
+            ("Raleigh",      "North Carolina"),
+            ("Pittsburgh",   "Pennsylvania"),
+            ("Columbus",     "Ohio"),
+            ("Indianapolis", "Indiana"),
+        ]
+        native_places = [
+            "Hyderabad", "Vijayawada", "Visakhapatnam", "Tirupati",
+            "Warangal", "Guntur", "Karimnagar", "Nellore",
+            "Rajahmundry", "Kakinada", "Anantapur", "Kurnool",
+        ]
+
+        db = SessionLocal()
+        try:
+            # Update all seeded profiles (identified by @example.com email)
+            profiles = db.query(Profile).filter(Profile.email.like("%@example.com")).all()
+            updated = 0
+            for p in profiles:
+                us_city, us_state = random.choice(us_locations)
+                native_city       = random.choice(native_places)
+                fname             = p.full_name.split()[0] if p.full_name else "User"
+                p.current_city    = us_city
+                p.current_state   = us_state
+                p.native_place    = native_city
+                p.about_me        = (
+                    f"I am {fname}, a {(p.profession or 'professional').lower()} "
+                    f"based in {us_city}, {us_state}. Originally from {native_city}, India."
+                )
+                updated += 1
+            db.commit()
+            return {"message": "Locations updated", "updated": updated}
         except Exception as e:
             db.rollback()
             return JSONResponse(status_code=500, content={"error": str(e)})

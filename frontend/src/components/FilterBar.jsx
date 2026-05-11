@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 
-const CITIES = [
-  "Hyderabad","Vijayawada","Visakhapatnam","Tirupati","Warangal","Guntur",
-  "Bengaluru","Chennai","Mumbai","Delhi","Pune","Kolkata",
+const STATES = [
+  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
+  "Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa",
+  "Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan",
+  "Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada",
+  "New Hampshire","New Jersey","New Mexico","New York","North Carolina",
+  "North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island",
+  "South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
+  "Virginia","Washington","Washington DC","West Virginia","Wisconsin","Wyoming",
 ];
 const EDUCATIONS = ["B.Tech", "M.Tech", "MBA", "MBBS", "B.Sc", "M.Sc", "B.Com", "CA", "PhD"];
 const PROFESSIONS = ["Software Engineer", "Doctor", "Teacher", "Business", "Government Employee", "Banker"];
@@ -13,7 +19,7 @@ export default function FilterBar({ onSearch, initialFilters = {} }) {
     gender:         "",
     age_min:        "",
     age_max:        "",
-    city:           "",
+    state:          "",
     education:      "",
     profession:     "",
     marital_status: "",
@@ -27,7 +33,7 @@ export default function FilterBar({ onSearch, initialFilters = {} }) {
       gender:         initialFilters.gender         || "",
       age_min:        initialFilters.age_min        != null ? String(initialFilters.age_min) : "",
       age_max:        initialFilters.age_max        != null ? String(initialFilters.age_max) : "",
-      city:           initialFilters.city           || initialFilters.state || "",
+      state:          initialFilters.state          || "",
       education:      initialFilters.education      || "",
       profession:     initialFilters.profession     || "",
       // pref_marital_statuses may be "Never Married,Divorced" — the dropdown
@@ -49,7 +55,7 @@ export default function FilterBar({ onSearch, initialFilters = {} }) {
   };
 
   const handleReset = () => {
-    setFilters({ gender: "", age_min: "", age_max: "", city: "", education: "", profession: "", marital_status: "" });
+    setFilters({ gender: "", age_min: "", age_max: "", state: "", education: "", profession: "", marital_status: "" });
     onSearch({});   // empty → backend falls back to opposite-gender default
   };
 
@@ -72,10 +78,10 @@ export default function FilterBar({ onSearch, initialFilters = {} }) {
         <input type="number" min={18} max={80} placeholder="80" value={filters.age_max} onChange={set("age_max")} style={{ width: 80 }} />
       </div>
       <div>
-        <label>City</label>
-        <select value={filters.city} onChange={set("city")}>
+        <label>State</label>
+        <select value={filters.state} onChange={set("state")}>
           <option value="">All</option>
-          {CITIES.map((s) => <option key={s} value={s}>{s}</option>)}
+          {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
       </div>
       <div>
