@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { API_ORIGIN } from "./data/api";
 import Navbar from "./components/Navbar";
 import BrowseProfiles from "./pages/BrowseProfiles";
 import ProfileDetail from "./pages/ProfileDetail";
@@ -100,6 +102,12 @@ function Home() {
 
 /* ─── App ───────────────────────────────────────────────────────────────────── */
 export default function App() {
+  // Ping the backend immediately on app load so Render wakes up from sleep
+  // before the user needs any data (e.g. test accounts on login page).
+  useEffect(() => {
+    fetch(`${API_ORIGIN}/`).catch(() => {});
+  }, []);
+
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Navbar />
