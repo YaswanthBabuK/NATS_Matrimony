@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Users, Heart, Inbox } from "lucide-react";
 import { API_ORIGIN } from "./data/api";
 import Navbar from "./components/Navbar";
 import BrowseProfiles from "./pages/BrowseProfiles";
@@ -28,19 +29,19 @@ function Home() {
 
   const cards = [
     {
-      icon: "💍",
+      IconComponent: Users,
       title: "Browse Profiles",
       desc: "Explore hundreds of Telugu profiles across the USA. Filter by age, education, profession and more.",
       path: "/matrimony",
     },
     {
-      icon: "❤️",
+      IconComponent: Heart,
       title: "My Matches",
       desc: "Discover compatible Telugu profiles across North America — ranked by age, education, profession, US state and hometown in India.",
       path: "/matrimony/matches",
     },
     {
-      icon: "📬",
+      IconComponent: Inbox,
       title: "My Interests",
       desc: "Track interests you've sent and respond to interests you've received. Unlock contact on acceptance.",
       path: "/matrimony/interests",
@@ -51,13 +52,13 @@ function Home() {
     <>
       {/* Hero */}
       <div className="home-hero">
-        <h2>🌸 NATS Matrimony — వివాహ వేదిక 🌸</h2>
+        <h2>NATS Matrimony — వివాహ వేదిక</h2>
         <p>Connecting Telugu families across North America since 2005</p>
         <button
           className="hero-find-partner-btn"
           onClick={() => navigate("/matrimony")}
         >
-          💍 Find Your Life Partner
+          <Heart size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} /> Find Your Life Partner
         </button>
       </div>
 
@@ -65,7 +66,7 @@ function Home() {
       <div className="home-cards">
         {cards.map((c) => (
           <div key={c.path} className="home-card" onClick={() => navigate(c.path)}>
-            <div className="home-card-icon">{c.icon}</div>
+            <div className="home-card-icon"><c.IconComponent size={32} /></div>
             <h3>{c.title}</h3>
             <p>{c.desc}</p>
           </div>

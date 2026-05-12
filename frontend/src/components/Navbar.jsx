@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { Menu, Phone, Sparkles, Star, Heart } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    NATS Site Header — 4-tier layout matching nats.org
@@ -26,15 +27,14 @@ function Torana() {
   );
 }
 
-const DEITY_ICONS  = ["🕉", "🛕", "🙏", "🌺", "⭐"];
 const DEITY_COLORS = ["#FF6B35", "#E8941A", "#C62828", "#6A1B9A", "#1565C0"];
 
 function DeityCircles() {
   return (
     <div className="deity-grid">
-      {DEITY_ICONS.map((icon, i) => (
-        <div key={i} className="deity-circle" style={{ background: DEITY_COLORS[i] }}>
-          <span className="deity-icon">{icon}</span>
+      {DEITY_COLORS.map((color, i) => (
+        <div key={i} className="deity-circle" style={{ background: color }}>
+          <span className="deity-icon"><Star size={16} color="#fff" fill="#fff" /></span>
         </div>
       ))}
     </div>
@@ -65,12 +65,12 @@ export default function Navbar() {
       <div className="nats-topbar">
         <div className="topbar-inner">
           <div className="topbar-left">
-            <span className="topbar-hamburger">☰</span>
+            <span className="topbar-hamburger"><Menu size={18} /></span>
             <span className="topbar-brand">NATS Global</span>
           </div>
 
           <div className="topbar-center">
-            <span className="topbar-phone-icon">📞</span>
+            <span className="topbar-phone-icon"><Phone size={16} /></span>
             <span className="topbar-helptext">
               Help Line:&nbsp;
               <strong>+1-888-4-TELUGU (+1-888-483-5848)</strong>
@@ -79,7 +79,7 @@ export default function Navbar() {
 
           <div className="topbar-right">
             <div className="sambaralu-wrap">
-              <span className="sambaralu-icon">🎊</span>
+              <span className="sambaralu-icon"><Sparkles size={16} /></span>
               <div className="sambaralu-text">
                 <span>America Telugu Sambaralu</span>
                 <span className="sambaralu-te">అమెరికా తెలుగు సంబరాలు</span>
@@ -116,7 +116,7 @@ export default function Navbar() {
             <li><a href="#media">MEDIA</a></li>
             <li><a href="#contact">CONTACT US</a></li>
             <li className="mainnav-matrimony">
-              <NavLink to="/matrimony">💍 MATRIMONY</NavLink>
+              <NavLink to="/matrimony" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Heart size={14} /> MATRIMONY</NavLink>
             </li>
             <li><a href="#login">LOGIN</a></li>
           </ul>

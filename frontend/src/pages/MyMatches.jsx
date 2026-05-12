@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Users, X } from "lucide-react";
 import SubNav from "../components/SubNav";
 import ProfileCard from "../components/ProfileCard";
 import {
@@ -108,7 +109,7 @@ export default function MyMatches() {
     <>
       <SubNav />
       <div className="matches-banner">
-        <h2>💑 My Matches</h2>
+        <h2 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Users size={24} /> My Matches</h2>
         <p>Profiles where interest has been mutually accepted</p>
       </div>
 
@@ -136,7 +137,7 @@ export default function MyMatches() {
                   onClick={() => handleUnmatch(p.profile_id)}
                   disabled={unmatchingId === p.profile_id}
                 >
-                  {unmatchingId === p.profile_id ? "Removing…" : "✕ Unmatch"}
+                  {unmatchingId === p.profile_id ? "Removing…" : <><X size={14} style={{ display: "inline", verticalAlign: "middle", marginRight: 4 }} /> Unmatch</>}
                 </button>
               </div>
             ))}

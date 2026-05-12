@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { User, Camera, EyeOff, Eye, Pencil, Trash2, Save } from "lucide-react";
 import SubNav from "../components/SubNav";
 import {
   getProfile,
@@ -347,7 +348,7 @@ export default function MyProfile() {
 
       {/* Page header */}
       <div className="mp-banner">
-        <h2>👤 My Profile</h2>
+        <h2 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><User size={24} /> My Profile</h2>
         <p>Manage your personal information and account settings</p>
       </div>
 
@@ -359,7 +360,7 @@ export default function MyProfile() {
             <img src={photoSrc} alt={profile.full_name} className="mp-photo" />
             {editing && (
               <div className="mp-photo-overlay">
-                <span>📷 Change</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Camera size={16} /> Change</span>
               </div>
             )}
           </div>
@@ -380,24 +381,25 @@ export default function MyProfile() {
                 .filter(Boolean).join(" · ")}
             </p>
             {profile.is_hidden && (
-              <span className="mp-hidden-badge">🙈 Hidden from Browse</span>
+              <span className="mp-hidden-badge" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><EyeOff size={14} /> Hidden from Browse</span>
             )}
           </div>
 
           {/* Action buttons (view mode only) */}
           {!editing && (
             <div className="mp-action-bar">
-              <button className="mp-btn mp-btn-edit" onClick={startEdit}>
-                ✏️ Edit Profile
+              <button className="mp-btn mp-btn-edit" onClick={startEdit} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <Pencil size={15} /> Edit Profile
               </button>
               <button
                 className={`mp-btn ${profile.is_hidden ? "mp-btn-show" : "mp-btn-hide"}`}
                 onClick={handleToggleVisibility}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
               >
-                {profile.is_hidden ? "👁️ Show Profile" : "🙈 Hide Profile"}
+                {profile.is_hidden ? <><Eye size={15} /> Show Profile</> : <><EyeOff size={15} /> Hide Profile</>}
               </button>
-              <button className="mp-btn mp-btn-delete" onClick={handleDelete}>
-                🗑️ Delete Account
+              <button className="mp-btn mp-btn-delete" onClick={handleDelete} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <Trash2 size={15} /> Delete Account
               </button>
             </div>
           )}
@@ -406,14 +408,14 @@ export default function MyProfile() {
         {/* ── VIEW MODE ─────────────────────────────────────────────────── */}
         {!editing && (
           <div className="mp-details-grid">
-            <Section title="📋 Personal Information">
+            <Section title="Personal Information">
               <Row label="Date of Birth"  value={profile.date_of_birth} />
               <Row label="Marital Status" value={profile.marital_status} />
               <Row label="Height"         value={profile.height} />
               <Row label="Profile by"     value={profile.profile_created_by} />
             </Section>
 
-            <Section title="🙏 Cultural Background">
+            <Section title="Cultural Background">
               <Row label="Religion"      value={profile.religion} />
               <Row label="Caste"         value={profile.caste} />
               <Row label="Sub Caste"     value={profile.sub_caste} />
@@ -421,40 +423,40 @@ export default function MyProfile() {
               <Row label="Mother Tongue" value={profile.mother_tongue} />
             </Section>
 
-            <Section title="🎓 Education & Career">
+            <Section title="Education & Career">
               <Row label="Education"     value={profile.education} />
               <Row label="Profession"    value={profile.profession} />
               <Row label="Annual Income" value={profile.annual_income} />
             </Section>
 
-            <Section title="📍 Location">
+            <Section title="Location">
               <Row label="City"         value={profile.current_city} />
               <Row label="State"        value={profile.current_state} />
               <Row label="Native Place" value={profile.native_place} />
             </Section>
 
-            <Section title="📞 Contact">
+            <Section title="Contact">
               <Row label="Email" value={profile.email} />
               <Row label="Phone" value={profile.phone} />
             </Section>
 
             {profile.about_me && (
               <div className="mp-section mp-about-section">
-                <h4 className="mp-section-title">💬 About Me</h4>
+                <h4 className="mp-section-title">About Me</h4>
                 <p className="mp-about-text">{profile.about_me}</p>
               </div>
             )}
 
             {/* ── Email Notification Preferences ──────────────────────── */}
             <div className="mp-section mp-email-prefs">
-              <h4 className="mp-section-title">🔔 Email Notifications</h4>
+              <h4 className="mp-section-title">Email Notifications</h4>
               <p className="mp-email-prefs-sub">
                 Choose which emails you receive from NATS Matrimony.
               </p>
 
               <div className="mp-pref-row">
                 <div className="mp-pref-info">
-                  <span className="mp-pref-label">💌 Interest Received</span>
+                  <span className="mp-pref-label">Interest Received</span>
                   <span className="mp-pref-desc">Email when someone sends you an interest</span>
                 </div>
                 <button
@@ -468,7 +470,7 @@ export default function MyProfile() {
 
               <div className="mp-pref-row">
                 <div className="mp-pref-info">
-                  <span className="mp-pref-label">🎉 Interest Accepted</span>
+                  <span className="mp-pref-label">Interest Accepted</span>
                   <span className="mp-pref-desc">Email when someone accepts your interest</span>
                 </div>
                 <button
@@ -489,7 +491,7 @@ export default function MyProfile() {
 
             {/* Basic */}
             <div className="mp-edit-section">
-              <h4 className="mp-edit-section-title">📋 Basic Information</h4>
+              <h4 className="mp-edit-section-title">Basic Information</h4>
               <div className="mp-edit-grid">
                 <EField label="Full Name *" error={errors.full_name}>
                   <input
@@ -537,7 +539,7 @@ export default function MyProfile() {
 
             {/* Cultural */}
             <div className="mp-edit-section">
-              <h4 className="mp-edit-section-title">🙏 Cultural Background</h4>
+              <h4 className="mp-edit-section-title">Cultural Background</h4>
               <div className="mp-edit-grid">
                 <EField label="Religion">
                   <select className="mp-select" value={form.religion} onChange={(e) => set("religion", e.target.value)}>
@@ -578,7 +580,7 @@ export default function MyProfile() {
 
             {/* Education */}
             <div className="mp-edit-section">
-              <h4 className="mp-edit-section-title">🎓 Education &amp; Career</h4>
+              <h4 className="mp-edit-section-title">Education &amp; Career</h4>
               <div className="mp-edit-grid">
                 <EField label="Education">
                   <select className="mp-select" value={form.education} onChange={(e) => set("education", e.target.value)}>
@@ -616,7 +618,7 @@ export default function MyProfile() {
 
             {/* Location */}
             <div className="mp-edit-section">
-              <h4 className="mp-edit-section-title">📍 Location</h4>
+              <h4 className="mp-edit-section-title">Location</h4>
               <div className="mp-edit-grid">
                 <EField label="City *" error={errors.current_city}>
                   <input
@@ -645,7 +647,7 @@ export default function MyProfile() {
 
             {/* About Me */}
             <div className="mp-edit-section">
-              <h4 className="mp-edit-section-title">💬 About Me</h4>
+              <h4 className="mp-edit-section-title">About Me</h4>
               <textarea
                 className={`mp-textarea${errors.about_me ? " mp-input-err" : ""}`}
                 rows={5}
@@ -666,7 +668,7 @@ export default function MyProfile() {
             {/* Save / Cancel */}
             <div className="mp-edit-actions">
               <button className="mp-btn mp-btn-save" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving…" : "💾 Save Changes"}
+                {saving ? "Saving…" : <><Save size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} /> Save Changes</>}
               </button>
               <button className="mp-btn mp-btn-cancel" onClick={cancelEdit} disabled={saving}>
                 Cancel

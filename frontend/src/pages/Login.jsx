@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { CheckCircle, Clock, FlaskConical, User } from "lucide-react";
 import {
   auth,
   googleProvider,
@@ -135,7 +136,7 @@ export default function Login() {
     setResetLoading(true);
     try {
       await sendPasswordResetEmail(auth, resetEmail.trim());
-      setResetMsg("✅ Reset link sent! Check your inbox (and spam folder).");
+      setResetMsg("Reset link sent! Check your inbox (and spam folder).");
     } catch (err) {
       const msgs = {
         "auth/user-not-found": "No Firebase account found with this email.",
@@ -163,8 +164,8 @@ export default function Login() {
           const male   = data.accounts.find(a => a.gender === "Male");
           const female = data.accounts.find(a => a.gender === "Female");
           const accounts = [];
-          if (male)   accounts.push({ label: "👨 Male",   ...male,   password: data.password });
-          if (female) accounts.push({ label: "👩 Female", ...female, password: data.password });
+          if (male)   accounts.push({ label: "Male",   gender: "Male",   ...male,   password: data.password });
+          if (female) accounts.push({ label: "Female", gender: "Female", ...female, password: data.password });
           setTestAccounts(accounts);
           setTestAccountsLoad(false);
         })
@@ -195,8 +196,8 @@ export default function Login() {
         <hr className="login-divider" />
 
         {justRegistered && (
-          <div className="login-success-banner">
-            🎉 Registration complete! Sign in with your new account.
+          <div className="login-success-banner" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <CheckCircle size={18} /> Registration complete! Sign in with your new account.
           </div>
         )}
 
@@ -234,13 +235,13 @@ export default function Login() {
             {/* ── Test credentials ─────────────────────────────────────── */}
             {testAccountsLoad ? (
               <div className="login-test-accounts">
-                <p className="login-test-label" style={{ opacity: 0.6 }}>
-                  ⏳ Loading test accounts…
+                <p className="login-test-label" style={{ opacity: 0.6, display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Clock size={14} /> Loading test accounts…
                 </p>
               </div>
             ) : testAccounts.length > 0 && (
               <div className="login-test-accounts">
-                <p className="login-test-label">🧪 Try a test account</p>
+                <p className="login-test-label" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><FlaskConical size={15} /> Try a test account</p>
                 <div className="login-test-btns">
                   {testAccounts.map((acc) => (
                     <button
@@ -248,8 +249,9 @@ export default function Login() {
                       type="button"
                       className="login-test-btn"
                       onClick={() => fillTest(acc)}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
                     >
-                      {acc.label}
+                      <User size={14} /> {acc.label}
                       <span className="login-test-email">{acc.email}</span>
                     </button>
                   ))}
@@ -332,7 +334,7 @@ export default function Login() {
                 style={{ marginBottom: "12px" }}
               />
               {resetMsg && (
-                <p className={`modal-msg ${resetMsg.startsWith("✅") ? "modal-msg--ok" : "modal-msg--err"}`}>
+                <p className={`modal-msg ${resetMsg.startsWith("Reset link") ? "modal-msg--ok" : "modal-msg--err"}`}>
                   {resetMsg}
                 </p>
               )}

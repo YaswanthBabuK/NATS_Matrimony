@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Bell, Mail, CheckCircle, XCircle } from "lucide-react";
 import {
   getNotifications,
   markNotificationRead,
@@ -21,21 +22,25 @@ function timeAgo(iso) {
 
 const NOTIF_META = {
   interest_received: {
-    icon: "💌",
     text: (name) => `${name} sent you an interest`,
     path: "/matrimony/interests",
   },
   interest_accepted: {
-    icon: "✅",
     text: (name) => `${name} accepted your interest!`,
     path: "/matrimony/matches",
   },
   interest_rejected: {
-    icon: "❌",
     text: (name) => `${name} declined your interest`,
     path: "/matrimony/interests",
   },
 };
+
+function notifIcon(type) {
+  if (type === "interest_received") return <Mail size={16} />;
+  if (type === "interest_accepted") return <CheckCircle size={16} />;
+  if (type === "interest_rejected") return <XCircle size={16} />;
+  return <Bell size={16} />;
+}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -128,7 +133,7 @@ export default function NotificationBell({ profileId }) {
         title="Notifications"
         aria-label={`${unread} unread notifications`}
       >
-        🔔
+        <Bell size={20} />
         {unread > 0 && (
           <span className="notif-badge">{unread > 9 ? "9+" : unread}</span>
         )}
@@ -163,11 +168,11 @@ export default function NotificationBell({ profileId }) {
                     <div className="notif-avatar">
                       {photo
                         ? <img src={photo} alt={n.actor_name} className="notif-avatar-img" />
-                        : <span className="notif-avatar-fallback">{meta.icon || "🔔"}</span>
+                        : <span className="notif-avatar-fallback">{notifIcon(n.type)}</span>
                       }
                     </div>
                     <div className="notif-body">
-                      <p className="notif-msg">{meta.icon} {msgText}</p>
+                      <p className="notif-msg" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>{notifIcon(n.type)} {msgText}</p>
                       <span className="notif-time">{timeAgo(n.created_at)}</span>
                     </div>
                     {!n.is_read && <span className="notif-dot" />}

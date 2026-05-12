@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Mail, Clock, CheckCircle2, XCircle, Heart, CheckCircle, X } from "lucide-react";
 import SubNav from "../components/SubNav";
 import ContactReveal from "../components/ContactReveal";
 import {
@@ -105,7 +106,7 @@ export default function ProfileDetail() {
       await updateInterest(interestId, status);
       notify(
         status === "accepted"
-          ? "🎉 You accepted! Contact details are now unlocked."
+          ? "You accepted! Contact details are now unlocked."
           : "Interest declined.",
         status === "accepted" ? "success" : "info"
       );
@@ -130,7 +131,7 @@ export default function ProfileDetail() {
       } else {
         const res = await addWishlist(currentId, id);
         setWishlistId(res.wishlist_id);
-        notify("Added to wishlist! ❤️", "success");
+        notify("Added to wishlist!", "success");
       }
     } catch (err) {
       notify(err.response?.data?.detail || "Action failed.", "error");
@@ -180,7 +181,7 @@ export default function ProfileDetail() {
       {msg.text && (
         <div style={{ padding: "10px 32px", fontSize: 14, borderBottom: `1px solid ${msgColors[msg.type].border}`, ...msgColors[msg.type] }}>
           {msg.text}
-          <button onClick={() => setMsg({ text: "", type: "info" })} style={{ float: "right", background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "inherit" }}>✕</button>
+          <button onClick={() => setMsg({ text: "", type: "info" })} style={{ float: "right", background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "inherit" }}><X size={16} /></button>
         </div>
       )}
 
@@ -199,26 +200,26 @@ export default function ProfileDetail() {
 
               {/* ── Interest button state machine ── */}
               {uiState === null && (
-                <button className="btn btn-primary" onClick={handleSendInterest}>
-                  💌 Send Interest
+                <button className="btn btn-primary" onClick={handleSendInterest} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Mail size={14} /> Send Interest
                 </button>
               )}
 
               {uiState === "sent_pending" && (
-                <button className="btn btn-outline" disabled style={{ cursor: "default" }}>
-                  ⏳ Interest Pending
+                <button className="btn btn-outline" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Clock size={14} /> Interest Pending
                 </button>
               )}
 
               {uiState === "sent_accepted" && (
-                <button className="btn btn-success" disabled style={{ cursor: "default" }}>
-                  🎉 Mutual Match · Contact Unlocked
+                <button className="btn btn-success" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <CheckCircle2 size={14} /> Mutual Match · Contact Unlocked
                 </button>
               )}
 
               {uiState === "sent_rejected" && (
-                <button className="btn btn-outline" disabled style={{ cursor: "default", opacity: 0.6 }}>
-                  ❌ Interest Declined
+                <button className="btn btn-outline" disabled style={{ cursor: "default", opacity: 0.6, display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <XCircle size={14} /> Interest Declined
                 </button>
               )}
 
@@ -226,20 +227,20 @@ export default function ProfileDetail() {
               {uiState === "recv_pending" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ background: "#FEF3CD", color: "#856404", padding: "8px 12px", borderRadius: 4, fontSize: 13, marginBottom: 4 }}>
-                    💛 This person sent you an interest
+                    This person sent you an interest
                   </div>
-                  <button className="btn btn-success" onClick={() => handleRespondToInterest("accepted")}>
-                    ✅ Accept Interest
+                  <button className="btn btn-success" onClick={() => handleRespondToInterest("accepted")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <CheckCircle size={14} /> Accept Interest
                   </button>
-                  <button className="btn btn-danger" onClick={() => handleRespondToInterest("rejected")}>
-                    ✕ Decline Interest
+                  <button className="btn btn-danger" onClick={() => handleRespondToInterest("rejected")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <X size={14} /> Decline Interest
                   </button>
                 </div>
               )}
 
               {uiState === "recv_accepted" && (
-                <button className="btn btn-success" disabled style={{ cursor: "default" }}>
-                  🎉 Mutual Match · Contact Unlocked
+                <button className="btn btn-success" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <CheckCircle2 size={14} /> Mutual Match · Contact Unlocked
                 </button>
               )}
 
@@ -250,13 +251,13 @@ export default function ProfileDetail() {
               )}
 
               {/* Wishlist */}
-              <button className="btn btn-outline" onClick={handleWishlist}>
-                {wishlistId ? "❤️ Wishlisted" : "🤍 Add to Wishlist"}
+              <button className="btn btn-outline" onClick={handleWishlist} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <Heart size={14} fill={wishlistId ? "currentColor" : "none"} /> {wishlistId ? "Wishlisted" : "Add to Wishlist"}
               </button>
 
               {/* Report */}
               <button className="detail-report" onClick={handleReport}>
-                ⚑ Report Profile
+                Report Profile
               </button>
             </div>
           )}
@@ -273,7 +274,7 @@ export default function ProfileDetail() {
           {/* Mutual match banner */}
           {contactRevealed && (
             <div style={{ background: "linear-gradient(135deg,#27ae60,#1e8449)", color: "#fff", padding: "14px 20px", borderRadius: 8, marginBottom: 20, fontSize: 15, fontWeight: 600 }}>
-              🎉 Congratulations! You are a Mutual Match. Contact details are now visible.
+              Congratulations! You are a Mutual Match. Contact details are now visible.
             </div>
           )}
 

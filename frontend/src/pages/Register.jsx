@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Camera, RefreshCw, FolderOpen, Loader, CheckCircle2, Heart } from "lucide-react";
 import { register, checkEmail } from "../data/api";
 import { auth, createUserWithEmailAndPassword } from "../firebase";
 
@@ -32,11 +33,11 @@ const RELIGIONS     = ["Hindu","Christian","Muslim","Sikh","Jain","Buddhist","Ot
 const MOTHER_TONGUES= ["Telugu","Tamil","Kannada","Malayalam","Hindi","Marathi","Bengali","Other"];
 
 const STEPS = [
-  { num: 1, label: "Basic Info",  icon: "👤" },
-  { num: 2, label: "Personal",    icon: "🙏" },
-  { num: 3, label: "Education",   icon: "🎓" },
-  { num: 4, label: "Preferences", icon: "💫" },
-  { num: 5, label: "Photo",       icon: "📷" },
+  { num: 1, label: "Basic Info",  icon: "1" },
+  { num: 2, label: "Personal",    icon: "2" },
+  { num: 3, label: "Education",   icon: "3" },
+  { num: 4, label: "Preferences", icon: "4" },
+  { num: 5, label: "Photo",       icon: "5" },
 ];
 
 const MARITAL_STATUSES = ["Never Married", "Divorced", "Widowed", "Awaiting Divorce"];
@@ -545,7 +546,7 @@ export default function Register() {
                 const met = rule.test(form.password);
                 return (
                   <span key={rule.label} className={`reg-pwd-rule ${met ? "reg-pwd-rule--met" : ""}`}>
-                    {met ? "✓" : "✗"} {rule.label}
+                    {met ? <CheckCircle2 size={12} style={{ display: "inline", verticalAlign: "middle", marginRight: 3 }} /> : <span style={{ marginRight: 3 }}>-</span>} {rule.label}
                   </span>
                 );
               })}
@@ -581,7 +582,7 @@ export default function Register() {
             <label key={g} className={`reg-radio-card${form.gender === g ? " selected" : ""}`}>
               <input type="radio" name="gender" value={g}
                 checked={form.gender === g} onChange={() => set("gender", g)} />
-              <span>{g === "Male" ? "👨 Male" : "👩 Female"}</span>
+              <span>{g}</span>
             </label>
           ))}
         </div>
@@ -602,7 +603,7 @@ export default function Register() {
       )}
 
       {field("Email (Login ID)", true, errors.email,
-        isGoogle ? "🔒 Verified by Google — cannot be changed" : null,
+        isGoogle ? "Verified by Google — cannot be changed" : null,
         <input
           type="email"
           className={`reg-input${errors.email ? " reg-input-err" : ""}${isGoogle ? " reg-input-readonly" : ""}`}
@@ -718,7 +719,7 @@ export default function Register() {
   const renderStep4 = () => (
     <>
       <div className="reg-pref-note">
-        🌸 Help us find the best matches for you by sharing your partner preferences. All fields are optional.
+        Help us find the best matches for you by sharing your partner preferences. All fields are optional.
       </div>
 
       {/* ── Age Range ───────────────────────────────────────────────────── */}
@@ -811,7 +812,7 @@ export default function Register() {
           ? <img src={preview} className="reg-photo-preview" alt="Your photo" />
           : (
             <div className="reg-photo-placeholder">
-              <span style={{ fontSize: 56 }}>📷</span>
+              <Camera size={56} color="#ccc" />
               <span>No photo selected</span>
             </div>
           )
@@ -819,7 +820,7 @@ export default function Register() {
       </div>
 
       <label className="reg-photo-btn">
-        {preview ? "🔄 Change Photo" : "📁 Choose Photo"}
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{preview ? <><RefreshCw size={14} /> Change Photo</> : <><FolderOpen size={14} /> Choose Photo</>}</span>
         <input type="file" accept="image/*" onChange={handlePhoto} style={{ display: "none" }} />
       </label>
       <p style={{ fontSize: 12, color: "#aaa", textAlign: "center", marginTop: 8 }}>
@@ -829,7 +830,7 @@ export default function Register() {
       {submitErr && <div className="reg-submit-err">{submitErr}</div>}
 
       <button className="reg-submit-btn" onClick={handleSubmit} disabled={loading}>
-        {loading ? "⏳ Registering…" : "🎉 Complete Registration"}
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{loading ? <><Loader size={14} /> Registering…</> : <><CheckCircle2 size={14} /> Complete Registration</>}</span>
       </button>
     </>
   );
@@ -858,7 +859,7 @@ export default function Register() {
 
         {/* Header */}
         <div className="reg-header">
-          <h1>💍 Create Your Profile</h1>
+          <h1 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Heart size={24} /> Create Your Profile</h1>
           <p>Join NATS Matrimony — Find Your Life Partner</p>
         </div>
 
@@ -868,7 +869,7 @@ export default function Register() {
             <div key={s.num}
               className={`reg-step-item${step === s.num ? " active" : ""}${step > s.num ? " done" : ""}`}>
               <div className="reg-step-circle">
-                {step > s.num ? "✓" : s.icon}
+                {step > s.num ? <CheckCircle2 size={16} /> : s.icon}
               </div>
               <div className="reg-step-lbl">{s.label}</div>
             </div>

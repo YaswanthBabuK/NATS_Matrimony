@@ -53,7 +53,7 @@ export default function Wishlist() {
         {loading ? (
           <div className="loading">Loading wishlist...</div>
         ) : entries.length === 0 ? (
-          <div className="empty-msg">Your wishlist is empty. Browse profiles and click ❤️ to save.</div>
+          <div className="empty-msg">Your wishlist is empty. Browse profiles and save profiles to view them here.</div>
         ) : (
           <div className="profile-grid">
             {entries.map((entry) => (
@@ -68,7 +68,7 @@ export default function Wishlist() {
                   style={{ position: "absolute", bottom: 54, right: 12 }}
                   onClick={() => handleRemove(entry.wishlist_id)}
                 >
-                  Remove ✕
+                  Remove
                 </button>
               </div>
             ))}
