@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { Users, Heart, Inbox } from "lucide-react";
 import { API_ORIGIN } from "./data/api";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import BrowseProfiles from "./pages/BrowseProfiles";
 import ProfileDetail from "./pages/ProfileDetail";
 import MyMatches from "./pages/MyMatches";
@@ -112,6 +113,7 @@ export default function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Navbar />
+      <main>
       <Routes>
         {/* Public routes */}
         <Route path="/"          element={<Home />} />
@@ -128,6 +130,8 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      </main>
+      <Footer />
     </BrowserRouter>
   );
 }
