@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Mail, Clock, CheckCircle2, XCircle, Heart, CheckCircle, X } from "lucide-react";
-import SubNav from "../components/SubNav";
+import { IconMail, IconClock, IconCheckCircle2, IconXCircle, IconHeart, IconCheckCircle, IconX } from "../icons";
 import ContactReveal from "../components/ContactReveal";
 import {
   getProfile,
@@ -149,8 +148,8 @@ export default function ProfileDetail() {
   };
 
   // ── Derived state ──────────────────────────────────────────────────────────
-  if (loading) return <><SubNav /><div className="loading">Loading profile…</div></>;
-  if (!profile) return <><SubNav /><div className="error-msg">Profile not found.</div></>;
+  if (loading) return <><div className="loading">Loading profile…</div></>;
+  if (!profile) return <><div className="error-msg">Profile not found.</div></>;
 
   const isSelf    = String(profile.profile_id) === currentId;
   const pref      = profile.preference;
@@ -165,8 +164,6 @@ export default function ProfileDetail() {
 
   return (
     <>
-      <SubNav />
-
       {/* Back bar */}
       <div style={{ background: "#8B0000", padding: "10px 32px" }}>
         <button
@@ -181,7 +178,7 @@ export default function ProfileDetail() {
       {msg.text && (
         <div style={{ padding: "10px 32px", fontSize: 14, borderBottom: `1px solid ${msgColors[msg.type].border}`, ...msgColors[msg.type] }}>
           {msg.text}
-          <button onClick={() => setMsg({ text: "", type: "info" })} style={{ float: "right", background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "inherit" }}><X size={16} /></button>
+          <button onClick={() => setMsg({ text: "", type: "info" })} style={{ float: "right", background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "inherit" }}><IconX size={16} /></button>
         </div>
       )}
 
@@ -201,25 +198,25 @@ export default function ProfileDetail() {
               {/* ── Interest button state machine ── */}
               {uiState === null && (
                 <button className="btn btn-primary" onClick={handleSendInterest} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Mail size={14} /> Send Interest
+                  <IconMail size={14} /> Send Interest
                 </button>
               )}
 
               {uiState === "sent_pending" && (
                 <button className="btn btn-outline" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Clock size={14} /> Interest Pending
+                  <IconClock size={14} /> Interest Pending
                 </button>
               )}
 
               {uiState === "sent_accepted" && (
                 <button className="btn btn-success" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <CheckCircle2 size={14} /> Mutual Match · Contact Unlocked
+                  <IconCheckCircle2 size={14} /> Mutual Match · Contact Unlocked
                 </button>
               )}
 
               {uiState === "sent_rejected" && (
                 <button className="btn btn-outline" disabled style={{ cursor: "default", opacity: 0.6, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <XCircle size={14} /> Interest Declined
+                  <IconXCircle size={14} /> Interest Declined
                 </button>
               )}
 
@@ -230,17 +227,17 @@ export default function ProfileDetail() {
                     This person sent you an interest
                   </div>
                   <button className="btn btn-success" onClick={() => handleRespondToInterest("accepted")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                    <CheckCircle size={14} /> Accept Interest
+                    <IconCheckCircle size={14} /> Accept Interest
                   </button>
                   <button className="btn btn-danger" onClick={() => handleRespondToInterest("rejected")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                    <X size={14} /> Decline Interest
+                    <IconX size={14} /> Decline Interest
                   </button>
                 </div>
               )}
 
               {uiState === "recv_accepted" && (
                 <button className="btn btn-success" disabled style={{ cursor: "default", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <CheckCircle2 size={14} /> Mutual Match · Contact Unlocked
+                  <IconCheckCircle2 size={14} /> Mutual Match · Contact Unlocked
                 </button>
               )}
 
@@ -252,7 +249,7 @@ export default function ProfileDetail() {
 
               {/* Wishlist */}
               <button className="btn btn-outline" onClick={handleWishlist} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <Heart size={14} fill={wishlistId ? "currentColor" : "none"} /> {wishlistId ? "Wishlisted" : "Add to Wishlist"}
+                <IconHeart size={14} filled={!!wishlistId} /> {wishlistId ? "Wishlisted" : "Add to Wishlist"}
               </button>
 
               {/* Report */}

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Camera, RefreshCw, FolderOpen, Loader, CheckCircle2, Heart } from "lucide-react";
+import { IconCamera, IconRefreshCw, IconFolderOpen, IconLoader, IconCheckCircle2, IconHeart } from "../icons";
 import { register, checkEmail } from "../data/api";
 import { auth, createUserWithEmailAndPassword } from "../firebase";
 
@@ -546,7 +546,7 @@ export default function Register() {
                 const met = rule.test(form.password);
                 return (
                   <span key={rule.label} className={`reg-pwd-rule ${met ? "reg-pwd-rule--met" : ""}`}>
-                    {met ? <CheckCircle2 size={12} style={{ display: "inline", verticalAlign: "middle", marginRight: 3 }} /> : <span style={{ marginRight: 3 }}>-</span>} {rule.label}
+                    {met ? <IconCheckCircle2 size={12} style={{ display: "inline", verticalAlign: "middle", marginRight: 3 }} /> : <span style={{ marginRight: 3 }}>-</span>} {rule.label}
                   </span>
                 );
               })}
@@ -812,7 +812,7 @@ export default function Register() {
           ? <img src={preview} className="reg-photo-preview" alt="Your photo" />
           : (
             <div className="reg-photo-placeholder">
-              <Camera size={56} color="#ccc" />
+              <IconCamera size={56} color="#ccc" />
               <span>No photo selected</span>
             </div>
           )
@@ -820,7 +820,7 @@ export default function Register() {
       </div>
 
       <label className="reg-photo-btn">
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{preview ? <><RefreshCw size={14} /> Change Photo</> : <><FolderOpen size={14} /> Choose Photo</>}</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{preview ? <><IconRefreshCw size={14} /> Change Photo</> : <><IconFolderOpen size={14} /> Choose Photo</>}</span>
         <input type="file" accept="image/*" onChange={handlePhoto} style={{ display: "none" }} />
       </label>
       <p style={{ fontSize: 12, color: "#aaa", textAlign: "center", marginTop: 8 }}>
@@ -830,7 +830,7 @@ export default function Register() {
       {submitErr && <div className="reg-submit-err">{submitErr}</div>}
 
       <button className="reg-submit-btn" onClick={handleSubmit} disabled={loading}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{loading ? <><Loader size={14} /> Registering…</> : <><CheckCircle2 size={14} /> Complete Registration</>}</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{loading ? <><IconLoader size={14} /> Registering…</> : <><IconCheckCircle2 size={14} /> Complete Registration</>}</span>
       </button>
     </>
   );
@@ -859,7 +859,7 @@ export default function Register() {
 
         {/* Header */}
         <div className="reg-header">
-          <h1 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Heart size={24} /> Create Your Profile</h1>
+          <h1 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><IconHeart size={24} /> Create Your Profile</h1>
           <p>Join NATS Matrimony — Find Your Life Partner</p>
         </div>
 
@@ -869,7 +869,7 @@ export default function Register() {
             <div key={s.num}
               className={`reg-step-item${step === s.num ? " active" : ""}${step > s.num ? " done" : ""}`}>
               <div className="reg-step-circle">
-                {step > s.num ? <CheckCircle2 size={16} /> : s.icon}
+                {step > s.num ? <IconCheckCircle2 size={16} /> : s.icon}
               </div>
               <div className="reg-step-lbl">{s.label}</div>
             </div>

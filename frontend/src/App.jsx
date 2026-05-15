@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
-import { Users, Heart, Inbox } from "lucide-react";
+import { IconUsers, IconHeart, IconInbox } from "./icons";
 import { API_ORIGIN } from "./data/api";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -26,23 +26,24 @@ function RequireAuth({ children }) {
 
 /* ─── Home page ────────────────────────────────────────────────────────────── */
 function Home() {
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const profileId = sessionStorage.getItem("currentProfileId");
 
   const cards = [
     {
-      IconComponent: Users,
+      IconComponent: IconUsers,
       title: "Browse Profiles",
       desc: "Explore hundreds of Telugu profiles across the USA. Filter by age, education, profession and more.",
       path: "/matrimony",
     },
     {
-      IconComponent: Heart,
+      IconComponent: IconHeart,
       title: "My Matches",
       desc: "Discover compatible Telugu profiles across North America — ranked by age, education, profession, US state and hometown in India.",
       path: "/matrimony/matches",
     },
     {
-      IconComponent: Inbox,
+      IconComponent: IconInbox,
       title: "My Interests",
       desc: "Track interests you've sent and respond to interests you've received. Unlock contact on acceptance.",
       path: "/matrimony/interests",
@@ -51,19 +52,34 @@ function Home() {
 
   return (
     <>
-      {/* Hero */}
+      {/* ── Full-screen Hero ── */}
       <div className="home-hero">
-        <h2>NATS Matrimony — వివాహ వేదిక</h2>
-        <p>Connecting Telugu families across North America since 2005</p>
-        <button
-          className="hero-find-partner-btn"
-          onClick={() => navigate("/matrimony")}
-        >
-          <Heart size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} /> Find Your Life Partner
-        </button>
+        <div className="hero-content">
+          <div className="hero-badge">
+            <IconHeart size={13} /> NATS MEMBERS ONLY — TRUSTED COMMUNITY SERVICE
+          </div>
+          <h1 className="hero-heading">
+            <span className="hero-white">Find Your Life</span>
+            <span className="hero-gold">Partner</span>
+          </h1>
+          <p className="hero-sub">
+            Connecting <strong className="hero-highlight">Telugu families</strong> across North America.
+            Find your perfect match within the <strong>NATS community</strong>.
+          </p>
+          <div className="hero-btns">
+            <button className="hero-btn-gold" onClick={() => navigate(profileId ? "/matrimony" : "/login")}>
+              {profileId ? "BROWSE PROFILES" : "FIND YOUR LIFE PARTNER"}
+            </button>
+            {profileId && (
+              <button className="hero-btn-outline" onClick={() => navigate("/matrimony/matches")}>
+                MY MATCHES
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Info cards */}
+      {/* ── Info cards ── */}
       <div className="home-cards">
         {cards.map((c) => (
           <div key={c.path} className="home-card" onClick={() => navigate(c.path)}>
@@ -74,32 +90,42 @@ function Home() {
         ))}
       </div>
 
-      {/* Stats strip */}
-      <div
-        style={{
-          background: "#8B0000",
-          color: "#fff",
-          display: "flex",
-          justifyContent: "center",
-          gap: 60,
-          padding: "28px 32px",
-          flexWrap: "wrap",
-        }}
-      >
+      {/* ── Stats strip ── */}
+      <div className="home-stats-strip">
         {[
           { num: "50+",   label: "Active Profiles" },
           { num: "8",     label: "US States" },
           { num: "100%",  label: "Telugu Community" },
           { num: "Free",  label: "To Browse" },
         ].map((s) => (
-          <div key={s.label} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 30, fontWeight: 900, color: "#FFD700" }}>{s.num}</div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", marginTop: 4 }}>{s.label}</div>
+          <div key={s.label} className="home-stat">
+            <div className="home-stat-num">{s.num}</div>
+            <div className="home-stat-label">{s.label}</div>
           </div>
         ))}
       </div>
     </>
   );
+}
+
+function NavbarWrapper() {
+  return <Navbar />;
+}
+
+function MainContent({ children }) {
+  const location = useLocation();
+  const [profileId, setProfileId] = useState(() => sessionStorage.getItem("currentProfileId"));
+
+  useEffect(() => {
+    const sync = () => setProfileId(sessionStorage.getItem("currentProfileId"));
+    window.addEventListener("authChanged", sync);
+    return () => window.removeEventListener("authChanged", sync);
+  }, []);
+
+  const onMatrimonyPage = location.pathname.startsWith("/matrimony");
+  const showSubnav = profileId && onMatrimonyPage;
+
+  return <main>{children}</main>;
 }
 
 /* ─── App ───────────────────────────────────────────────────────────────────── */
@@ -112,8 +138,8 @@ export default function App() {
 
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <Navbar />
-      <main>
+      <NavbarWrapper />
+      <MainContent>
       <Routes>
         {/* Public routes */}
         <Route path="/"          element={<Home />} />
@@ -130,7 +156,7 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      </main>
+      </MainContent>
       <Footer />
     </BrowserRouter>
   );

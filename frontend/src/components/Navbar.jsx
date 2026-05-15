@@ -1,130 +1,155 @@
-import { NavLink } from "react-router-dom";
-import { Menu, Phone, Sparkles, Star, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { IconHeart, IconLogOut, IconUser, IconUsers, IconInbox, IconBookHeart, IconLock, IconBell, IconChevronDown } from "../icons";
+import natsLogo from "../assets/NATS-logo.png";
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   NATS Site Header — 4-tier layout matching nats.org
-   ─────────────────────────────────────────────────────────────────────────── */
+const NATS = "https://www.natsworld.org/Content/User/images/";
 
-/* Mango-leaf torana rendered as CSS shapes */
-function Torana() {
-  return (
-    <div className="nats-torana" aria-hidden="true">
-      <div className="torana-rope" />
-      <div className="torana-leaves-row">
-        {Array.from({ length: 32 }).map((_, i) => {
-          const variant = i % 4;
-          const heightMap = [44, 36, 28, 36];
-          const h = heightMap[variant];
-          return (
-            <div key={i} className="torana-leaf-wrap">
-              <div className="torana-knot" />
-              <div className="torana-leaf" style={{ height: h }} />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-const DEITY_COLORS = ["#FF6B35", "#E8941A", "#C62828", "#6A1B9A", "#1565C0"];
-
-function DeityCircles() {
-  return (
-    <div className="deity-grid">
-      {DEITY_COLORS.map((color, i) => (
-        <div key={i} className="deity-circle" style={{ background: color }}>
-          <span className="deity-icon"><Star size={16} color="#fff" fill="#fff" /></span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
+/* ── Left logo ────────────────────────────────────────────────────────────── */
 function NatsSeal() {
   return (
     <div className="nats-seal-wrap">
-      <div className="nats-seal">
-        <div className="seal-arc-top">North America Telugu Society</div>
-        <div className="seal-center">
-          <div className="seal-nats-text">NATS</div>
-          <div className="seal-te-text">ఉ.అ.తె.స</div>
-        </div>
-        <div className="seal-arc-bottom">ఉత్తర అమెరికా తెలుగు సంఘం</div>
+      <img src={natsLogo} alt="NATS" className="nats-logo-img" />
+    </div>
+  );
+}
+
+/* ── Center banner text ─────────────────────────────────────────────────── */
+function BannerText() {
+  return (
+    <div className="banner-logotext-wrap">
+      <div className="banner-titles">
+        <h1 className="banner-title-en">NORTH AMERICA TELUGU SOCIETY</h1>
+        <h2 className="banner-title-te">NATS Matrimony — వివాహ వేదిక</h2>
+        <p className="banner-taxid">Connecting Telugu families across North America</p>
       </div>
     </div>
   );
 }
 
-/* ── Main component ─────────────────────────────────────────────────────────── */
-export default function Navbar() {
-  return (
-    <header className="nats-site-header">
+/* ── Right: Sign In / User pill ──────────────────────────────────────────── */
+function BannerAuth({ profileId, profileName, onLogout, navigate }) {
+  const [open, setOpen] = useState(false);
+  const initial = profileName ? profileName.charAt(0).toUpperCase() : "U";
 
-      {/* ── TIER 1 · Top utility bar (amber/gold) ──────────────────────────── */}
-      <div className="nats-topbar">
-        <div className="topbar-inner">
-          <div className="topbar-left">
-            <span className="topbar-hamburger"><Menu size={18} /></span>
-            <span className="topbar-brand">NATS Global</span>
-          </div>
+  if (profileId) {
+    return (
+      <div className="banner-auth">
+        {/* Bell icon */}
+        <button className="banner-bell-btn" aria-label="Notifications">
+          <IconBell size={20} color="#fff" />
+        </button>
 
-          <div className="topbar-center">
-            <span className="topbar-phone-icon"><Phone size={16} /></span>
-            <span className="topbar-helptext">
-              Help Line:&nbsp;
-              <strong>+1-888-4-TELUGU (+1-888-483-5848)</strong>
-            </span>
-          </div>
+        {/* User pill */}
+        <div className="banner-user-pill" onClick={() => setOpen(o => !o)}>
+          <span className="banner-user-avatar">{initial}</span>
+          <span className="banner-user-name">{profileName}</span>
+          <IconChevronDown size={14} color="#fff" />
 
-          <div className="topbar-right">
-            <div className="sambaralu-wrap">
-              <span className="sambaralu-icon"><Sparkles size={16} /></span>
-              <div className="sambaralu-text">
-                <span>America Telugu Sambaralu</span>
-                <span className="sambaralu-te">అమెరికా తెలుగు సంబరాలు</span>
-              </div>
+          {open && (
+            <div className="banner-dropdown">
+              <NavLink to="/matrimony/my-profile" className="banner-dd-item" onClick={() => setOpen(false)}>
+                <IconUser size={14} /> My Profile
+              </NavLink>
+              <button className="banner-dd-item banner-dd-logout" onClick={onLogout}>
+                <IconLogOut size={14} /> Sign Out
+              </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
+    );
+  }
 
-      {/* ── TIER 2 · Site banner (deep red) ────────────────────────────────── */}
-      <div className="nats-banner">
-        <div className="banner-drape banner-drape-left" aria-hidden="true" />
-        <div className="banner-content">
-          <NatsSeal />
-          <div className="banner-titles">
-            <h1 className="banner-title-en">NORTH AMERICA TELUGU SOCIETY</h1>
-            <h2 className="banner-title-te">ఉత్తర అమెరికా తెలుగు సంఘం</h2>
-            <p className="banner-taxid">Tax ID: 26-4194139</p>
-          </div>
-          <DeityCircles />
+  return (
+    <div className="banner-auth">
+      <button className="banner-signin-btn" onClick={() => navigate("/login")}>
+        <IconLock size={15} /> Sign In
+      </button>
+    </div>
+  );
+}
+
+/* ── Torana ─────────────────────────────────────────────────────────────── */
+function Torana() {
+  return <div className="nats-torana" aria-hidden="true" />;
+}
+
+/* ── Matrimony sub-nav ───────────────────────────────────────────────────── */
+function MatrimonySubnav() {
+  return (
+    <nav className="matrimony-subnav">
+      <div className="subnav-inner">
+        <div className="subnav-links">
+          <NavLink to="/matrimony" end className={({ isActive }) => isActive ? "subnav-link subnav-link--active" : "subnav-link"}>
+            <IconUsers size={14} /> Browse Profiles
+          </NavLink>
+          <NavLink to="/matrimony/matches" className={({ isActive }) => isActive ? "subnav-link subnav-link--active" : "subnav-link"}>
+            <IconHeart size={14} /> My Matches
+          </NavLink>
+          <NavLink to="/matrimony/interests" className={({ isActive }) => isActive ? "subnav-link subnav-link--active" : "subnav-link"}>
+            <IconInbox size={14} /> My Interests
+          </NavLink>
+          <NavLink to="/matrimony/wishlist" className={({ isActive }) => isActive ? "subnav-link subnav-link--active" : "subnav-link"}>
+            <IconBookHeart size={14} /> Wishlist
+          </NavLink>
         </div>
-        <div className="banner-drape banner-drape-right" aria-hidden="true" />
       </div>
+    </nav>
+  );
+}
 
-      {/* ── TIER 3 · Main navigation (white) ───────────────────────────────── */}
-      <nav className="nats-mainnav">
-        <div className="mainnav-inner">
-          <ul className="mainnav-links">
-            <li><NavLink to="/" end>HOME</NavLink></li>
-            <li><a href="#who">WHO WE ARE</a></li>
-            <li><a href="#what">WHAT WE DO</a></li>
-            <li><a href="#involved">GET INVOLVED</a></li>
-            <li><a href="#help">GET HELP</a></li>
-            <li><a href="#media">MEDIA</a></li>
-            <li><a href="#contact">CONTACT US</a></li>
-            <li className="mainnav-matrimony">
-              <NavLink to="/matrimony" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Heart size={14} /> MATRIMONY</NavLink>
-            </li>
-            <li><a href="#login">LOGIN</a></li>
-          </ul>
+/* ── Main Navbar ─────────────────────────────────────────────────────────── */
+export default function Navbar() {
+  const navigate  = useNavigate();
+  const location  = useLocation();
+
+  const [profileId,   setProfileId]   = useState(() => sessionStorage.getItem("currentProfileId"));
+  const [profileName, setProfileName] = useState(() => sessionStorage.getItem("currentProfileName") || "My Profile");
+
+  useEffect(() => {
+    const sync = () => {
+      setProfileId(sessionStorage.getItem("currentProfileId"));
+      setProfileName(sessionStorage.getItem("currentProfileName") || "My Profile");
+    };
+    window.addEventListener("authChanged", sync);
+    return () => window.removeEventListener("authChanged", sync);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    window.dispatchEvent(new Event("authChanged"));
+    navigate("/login");
+  };
+
+  const onMatrimonyPage = location.pathname.startsWith("/matrimony");
+  const showSubnav      = profileId && onMatrimonyPage;
+
+  return (
+    <>
+      <header className="nats-site-header">
+
+        {/* ══ BANNER — red gradient with logo + title + auth buttons ═══════ */}
+        <div className="nats-banner">
+          <div className="banner-content">
+            <NatsSeal />
+            <BannerText />
+            <BannerAuth
+              profileId={profileId}
+              profileName={profileName}
+              onLogout={handleLogout}
+              navigate={navigate}
+            />
+          </div>
         </div>
-      </nav>
 
-      {/* ── TIER 4 · Mango leaf torana ─────────────────────────────────────── */}
-      <Torana />
-    </header>
+        {/* ══ TORANA ════════════════════════════════════════════════════════ */}
+        <Torana />
+
+      </header>
+
+      {/* ══ MATRIMONY SUB-NAV — outside header so sticky works on scroll ══ */}
+      {showSubnav && <MatrimonySubnav />}
+    </>
   );
 }

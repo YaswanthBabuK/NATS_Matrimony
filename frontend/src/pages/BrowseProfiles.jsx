@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import FilterBar from "../components/FilterBar";
 import ProfileCard from "../components/ProfileCard";
-import SubNav from "../components/SubNav";
 import { getProfiles, getProfile, getWishlist, getInterestsSent, sendInterest } from "../data/api";
 
 export default function BrowseProfiles() {
@@ -106,7 +105,6 @@ export default function BrowseProfiles() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <>
-      <SubNav />
       <div className="page-banner">
         <h1>NATS Matrimony</h1>
         <p>వివాహ వేదిక — Find Your Life Partner</p>

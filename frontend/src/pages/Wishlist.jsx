@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import SubNav from "../components/SubNav";
 import ProfileCard from "../components/ProfileCard";
 import { getWishlist, removeWishlist } from "../data/api";
 
@@ -44,7 +43,6 @@ export default function Wishlist() {
 
   return (
     <>
-      <SubNav />
       <div className="page-banner">
         <h1>My Wishlist</h1>
         <p>Profiles you've saved for later</p>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Mail, CheckCircle, XCircle } from "lucide-react";
+import { IconBell, IconMail, IconCheckCircle, IconXCircle } from "../icons";
 import {
   getNotifications,
   markNotificationRead,
@@ -36,10 +36,10 @@ const NOTIF_META = {
 };
 
 function notifIcon(type) {
-  if (type === "interest_received") return <Mail size={16} />;
-  if (type === "interest_accepted") return <CheckCircle size={16} />;
-  if (type === "interest_rejected") return <XCircle size={16} />;
-  return <Bell size={16} />;
+  if (type === "interest_received") return <IconMail size={16} />;
+  if (type === "interest_accepted") return <IconCheckCircle size={16} />;
+  if (type === "interest_rejected") return <IconXCircle size={16} />;
+  return <IconBell size={16} />;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ export default function NotificationBell({ profileId }) {
         title="Notifications"
         aria-label={`${unread} unread notifications`}
       >
-        <Bell size={20} />
+        <IconBell size={20} />
         {unread > 0 && (
           <span className="notif-badge">{unread > 9 ? "9+" : unread}</span>
         )}

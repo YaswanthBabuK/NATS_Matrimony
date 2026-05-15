@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Camera, EyeOff, Eye, Pencil, Trash2, Save } from "lucide-react";
-import SubNav from "../components/SubNav";
+import { IconUser, IconCamera, IconEyeOff, IconEye, IconPencil, IconTrash2, IconSave } from "../icons";
 import {
   getProfile,
   updateProfile,
@@ -319,14 +318,12 @@ export default function MyProfile() {
   // ── Render ────────────────────────────────────────────────────────────────
   if (loading) return (
     <>
-      <SubNav />
       <div className="loading">Loading your profile…</div>
     </>
   );
 
   if (!profile) return (
     <>
-      <SubNav />
       <div className="error-msg">Could not load profile.</div>
     </>
   );
@@ -337,8 +334,6 @@ export default function MyProfile() {
 
   return (
     <>
-      <SubNav />
-
       {/* Toast */}
       {toast && (
         <div className={`mp-toast ${toast.ok ? "mp-toast-ok" : "mp-toast-err"}`}>
@@ -348,7 +343,7 @@ export default function MyProfile() {
 
       {/* Page header */}
       <div className="mp-banner">
-        <h2 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><User size={24} /> My Profile</h2>
+        <h2 style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><IconUser size={24} /> My Profile</h2>
         <p>Manage your personal information and account settings</p>
       </div>
 
@@ -360,7 +355,7 @@ export default function MyProfile() {
             <img src={photoSrc} alt={profile.full_name} className="mp-photo" />
             {editing && (
               <div className="mp-photo-overlay">
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Camera size={16} /> Change</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconCamera size={16} /> Change</span>
               </div>
             )}
           </div>
@@ -381,7 +376,7 @@ export default function MyProfile() {
                 .filter(Boolean).join(" · ")}
             </p>
             {profile.is_hidden && (
-              <span className="mp-hidden-badge" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><EyeOff size={14} /> Hidden from Browse</span>
+              <span className="mp-hidden-badge" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconEyeOff size={14} /> Hidden from Browse</span>
             )}
           </div>
 
@@ -389,17 +384,17 @@ export default function MyProfile() {
           {!editing && (
             <div className="mp-action-bar">
               <button className="mp-btn mp-btn-edit" onClick={startEdit} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <Pencil size={15} /> Edit Profile
+                <IconPencil size={15} /> Edit Profile
               </button>
               <button
                 className={`mp-btn ${profile.is_hidden ? "mp-btn-show" : "mp-btn-hide"}`}
                 onClick={handleToggleVisibility}
                 style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
               >
-                {profile.is_hidden ? <><Eye size={15} /> Show Profile</> : <><EyeOff size={15} /> Hide Profile</>}
+                {profile.is_hidden ? <><IconEye size={15} /> Show Profile</> : <><IconEyeOff size={15} /> Hide Profile</>}
               </button>
               <button className="mp-btn mp-btn-delete" onClick={handleDelete} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <Trash2 size={15} /> Delete Account
+                <IconTrash2 size={15} /> Delete Account
               </button>
             </div>
           )}
@@ -668,7 +663,7 @@ export default function MyProfile() {
             {/* Save / Cancel */}
             <div className="mp-edit-actions">
               <button className="mp-btn mp-btn-save" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving…" : <><Save size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} /> Save Changes</>}
+                {saving ? "Saving…" : <><IconSave size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} /> Save Changes</>}
               </button>
               <button className="mp-btn mp-btn-cancel" onClick={cancelEdit} disabled={saving}>
                 Cancel

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import NotificationBell from "./NotificationBell";
-import { User } from "lucide-react";
+import { IconUser } from "../icons";
 
 export default function SubNav() {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function SubNav() {
       <div className="subnav-right">
         {profileId && <NotificationBell profileId={profileId} />}
         {userName && (
-          <span className="subnav-user" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><User size={15} /> {userName}</span>
+          <span className="subnav-user" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconUser size={15} /> {userName}</span>
         )}
         <button className="subnav-logout-btn" onClick={handleLogout}>
           Logout

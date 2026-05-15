@@ -1,17 +1,18 @@
 /* ============================================================================
    NATS Matrimony — Complete Stylesheet
-   Matches the visual identity of the real NATS (nats.org) website.
+   Matches the visual identity of the real NATS (natsworld.org) website.
 
-   Color tokens
-   ─────────────
-   --gold       : #F5A623  topbar, active nav, accents
-   --gold-dark  : #D4881A  hover/darken
-   --red        : #8B0000  banner, primary buttons
-   --red-dark   : #6b0000  hover/darken
-   --maroon     : #7B1C1C  nav link text
-   --green      : #1B5E20  torana background
-   --green-mid  : #2E7D32  leaf fill
-   --green-leaf : #388E3C  leaf highlight
+   Color tokens — sourced from actual natsworld.org logo assets
+   ─────────────────────────────────────────────────────────────
+   --nats-orange  : #E87722  primary accent (NATS logo orange letters)
+   --nats-orange2 : #D4660F  hover/darken
+   --nats-navy    : #1A3A8A  secondary (NATS logo blue letters, nav text)
+   --nats-navy2   : #0F2660  hover/darken
+   --nats-red     : #8B0000  banner background, critical buttons
+   --nats-red-dk  : #6b0000  hover/darken
+   --nats-topbar  : #2D0800  dark maroon topbar (matches sambaralu header bg)
+   --nats-gold    : #FFD700  telugu script highlight
+   --nats-green   : #1B5E20  torana background
    ============================================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,337 +24,358 @@ body {
   min-height: 100vh;
 }
 
+
 a { text-decoration: none; color: inherit; }
 
 /* ============================================================================
-   TIER 1 — Top utility bar  (amber / gold)
+   TIER 1 — Top utility bar
+   Exact values from natsworld.org CSS:
+     .tophed-bg  { background-color: #ff991a; }
+     .tophedshad { filter: drop-shadow(0px 3px 3px rgba(124,0,1,0.3)); }
    ============================================================================ */
 
 .nats-topbar {
-  background: linear-gradient(180deg, #4a3e08 0%, #3d3208 60%, #332a06 100%);
-  border-bottom: 2px solid #2a2205;
-  color: #f5e6a0;
+  background-color: #ff991a;               /* exact natsworld.org .tophed-bg */
+  filter: drop-shadow(0px 3px 3px rgba(124,0,1,0.3)); /* .tophedshad */
+  color: #ffffff;
   font-size: 13px;
-  font-weight: 600;
-  padding: 6px 0;
+  padding: 0;
+  position: relative;
+  z-index: 300;
 }
 
 .topbar-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.topbar-hamburger {
-  font-size: 20px;
-  cursor: pointer;
-  color: #3B1A00;
-  background: none;
-  border: none;
-  line-height: 1;
-}
-
-.topbar-brand {
-  font-size: 14px;
-  font-weight: 700;
-  color: #f5e6a0;
-  letter-spacing: 0.5px;
-}
-
-.topbar-center {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  justify-content: center;
-}
-
-.topbar-phone-icon { font-size: 18px; }
-
-.topbar-helptext {
-  font-size: 14px;
-  color: #f5e6a0;
-  background: rgba(255,255,255,0.12);
-  padding: 3px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.25);
-}
-
-.topbar-helptext strong { color: #FFD700; font-size: 14px; }
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.sambaralu-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.1);
-  padding: 4px 10px;
-  border-radius: 4px;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.sambaralu-icon { font-size: 22px; }
-
-.sambaralu-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-  font-size: 12px;
-  font-weight: 700;
-  color: #f5e6a0;
-}
-
-.sambaralu-te {
-  font-size: 11px;
-  color: #FFD700;
-}
-
-/* ============================================================================
-   TIER 2 — Site banner  (deep red with drapes & decorations)
-   ============================================================================ */
-
-.nats-banner {
-  background: linear-gradient(180deg, #A00000 0%, #8B0000 40%, #700000 100%);
-  position: relative;
-  overflow: hidden;
   padding: 0;
   display: flex;
   align-items: stretch;
-  min-height: 130px;
+  min-height: 64px;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   Banner side drapes — decorative curtain folds
-   ══════════════════════════════════════════════════════════════════════════════ */
-
-.banner-drape {
-  flex: 0 0 60px;
-  position: relative;
-  overflow: hidden;
-  z-index: 3;
+/* Left — hamburger lines + "NATS Global" */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  white-space: nowrap;
 }
 
-/* Vertical red curtain fold effect behind the plant */
-.banner-drape::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(180, 0, 0, 0.55) 0px,
-    rgba(130, 0, 0, 0.35) 18px,
-    rgba(180, 0, 0, 0.55) 36px
-  );
-  z-index: 0;
-  pointer-events: none;
+/* Exact 3-line hamburger matching natsworld.org .globlis */
+.topbar-hamburger-lines {
+  list-style: none;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+.topbar-hamburger-lines li {
+  width: 20px;
+  height: 3px;
+  background-color: #ffffff;
+}
+.topbar-hamburger-lines li:nth-child(2) {
+  width: 35px;
 }
 
-/* Gold trim stripe — inner edge of each drape */
-.banner-drape-left::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 4px; height: 100%;
-  background: linear-gradient(180deg, #FFD700, #F5A623, #E8941A, #F5A623, #FFD700);
-  z-index: 4;
+.topbar-brand {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1px;
+  /* exact .helptex-shad from natsworld.org */
+  filter: drop-shadow(0px 2px 2px rgba(166,5,0,0.4));
+  line-height: 18px;
+  padding: 22.5px 0 16px;
 }
 
-.banner-drape-right::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 4px; height: 100%;
-  background: linear-gradient(180deg, #FFD700, #F5A623, #E8941A, #F5A623, #FFD700);
-  z-index: 4;
-}
-
-/* banner-content z-index is set in the "Banner main content area" block above */
-
-/* Banner main content area — z-index keeps text above leaf overlap */
-.banner-content {
+/* Center — helpline pill */
+.topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
+  padding: 0 20px;
+}
+
+/* Exact helpline pill — from natsworld.org CSS:
+   .helpli-bg { background: url(images/help-icon.png) no-repeat left top #fff9f1; }
+   .helpline-bor { border-color: #ffbd6a; }
+   .border-radius25 { border-radius: 25px; }                                      */
+/* Exact .helpli-bg + .helpline-bor + .border-radius25 + .l-r-p25 from natsworld.org:
+   background: url(help-icon.png) no-repeat left top #fff9f1;
+   border: 2px solid #ffbd6a; border-radius: 25px; padding: 0 25px;
+   Inner h3: l-p30 (30px left), l-h42 (42px line-height), font20 (20px)           */
+.topbar-helpline-pill {
+  display: inline-block;
+  border: 2px solid #ffbd6a;               /* exact .helpline-bor */
+  border-radius: 25px;                     /* exact .border-radius25 */
+  background: url('https://www.natsworld.org/Content/User/images/help-icon.png') no-repeat left top #fff9f1;
+  padding: 0 25px;                         /* exact .l-r-p25 */
+  white-space: nowrap;
+}
+
+.topbar-helpline-label {
+  font-size: 20px;                         /* exact font20 */
+  font-weight: 300;                        /* Montserrat-Light */
+  color: #4f0000;                          /* exact .brown-t */
+  letter-spacing: 1px;
+  /* l-h42 = line-height 42px, l-p30 = 30px left padding to clear icon */
+  line-height: 42px;
+  padding-left: 30px;
+  display: inline;
+}
+
+.topbar-helpline-number {
+  font-size: 20px;                         /* exact font20 */
+  font-weight: 700;                        /* Montserrat-Bold */
+  color: #4f0000;                          /* exact .brown-t */
+  letter-spacing: 1px;
+  margin-left: 9px;                        /* exact .l-m9 */
+}
+
+/* Right — sambaralu image (the 313×64 image already contains the text) */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+/* The sambaralu banner image — shown as-is at its real dimensions */
+.sambaralu-banner-img {
+  height: 64px;
+  width: auto;
+  display: block;
+}
+
+/* ============================================================================
+   TIER 2 — Banner  (logo + title + deity images)
+   Replicates the red-gradient banner on natsworld.org
+   ============================================================================ */
+
+.nats-site-header {
+  /* the header is NOT sticky — only .nats-mainnav is */
+}
+
+.nats-banner {
+  background: linear-gradient(180deg, #A00000 0%, #8B0000 40%, #700000 100%);
+  padding: 0;
+}
+
+/* ── Banner main content ──────────────────────────────────────────────────── */
+.banner-content {
+  max-width: 1280px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 16px 24px;
-  position: relative;
-  z-index: 5;
+  padding: 6px 24px;
+  gap: 12px;
 }
 
-/* ── NATS Seal / Logo ───────────────────────────────────────────────────────── */
-.nats-seal-wrap {
-  flex: 0 0 auto;
+/* ── Left: NATS logo ──────────────────────────────────────────────────────── */
+.nats-seal-wrap { flex: 0 0 auto; }
+
+.nats-logo-img {
+  display: block;
+  width: 130px;
+  height: auto;
+  max-height: 72px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-.nats-seal {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #FFFDE7 0%, #FFF8E1 40%, #FFF3CD 70%, #FFE082 100%);
-  border: 4px solid #F5A623;
-  box-shadow: 0 0 0 3px #8B0000, 0 4px 16px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,200,0,0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-.nats-seal::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  border: 1.5px solid #D4881A;
-  opacity: 0.5;
-}
-
-.seal-arc-top {
-  font-size: 6px;
-  font-weight: 700;
-  color: #5a2d00;
-  text-align: center;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-  margin-bottom: 2px;
-}
-
-.seal-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.seal-nats-text {
-  font-size: 30px;
-  font-weight: 900;
-  color: #8B0000;
-  letter-spacing: 2px;
-  line-height: 1;
-  text-shadow: 1px 1px 0 #D4881A;
-}
-
-.seal-te-text {
-  font-size: 8px;
-  color: #5a2d00;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.seal-arc-bottom {
-  font-size: 5.5px;
-  color: #5a2d00;
-  text-align: center;
-  font-weight: 700;
-  margin-top: 2px;
-  letter-spacing: 0.3px;
-  line-height: 1.2;
-}
-
-/* ── Center title block ─────────────────────────────────────────────────────── */
-.banner-titles {
+/* ── Center: banner text ──────────────────────────────────────────────────── */
+.banner-logotext-wrap {
   flex: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.banner-titles { text-align: center; }
 
 .banner-title-en {
-  font-size: 30px;
+  font-size: 22px;
   font-weight: 900;
-  color: #FFFFFF;
+  color: #ffffff;
   letter-spacing: 2px;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5), 0 0 20px rgba(245,166,35,0.3);
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #5a0000, 0 0 30px rgba(0,0,0,0.3);
+  margin: 0 0 3px;
   line-height: 1.1;
-  margin-bottom: 6px;
-  font-family: "Open Sans", Arial, sans-serif;
-}
-
-@media (max-width: 900px) {
-  .banner-title-en { font-size: 20px; letter-spacing: 1px; }
 }
 
 .banner-title-te {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   color: #FFD700;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-  margin-bottom: 4px;
+  text-shadow: 1px 1px 0 #b85000, 0 0 16px rgba(180,70,0,0.6);
+  margin: 0 0 3px;
   letter-spacing: 1px;
 }
 
-@media (max-width: 900px) {
-  .banner-title-te { font-size: 14px; }
-}
-
 .banner-taxid {
-  font-size: 13px;
+  font-size: 11px;
   color: rgba(255,255,255,0.85);
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  margin: 0;
 }
 
-/* ── Deity circles ──────────────────────────────────────────────────────────── */
-.deity-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 6px;
+/* ── Right: Login / Register buttons ─────────────────────────────────────── */
+.banner-auth {
   flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Make the 5th item span / center */
-.deity-circle:nth-child(5) {
-  grid-column: 1 / 3;
-  justify-self: center;
+.banner-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: #FFD700;
+  color: #7a0000;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+  white-space: nowrap;
 }
+.banner-signin-btn:hover { background: #f0c800; transform: translateY(-1px); }
 
-.deity-circle {
-  width: 46px;
-  height: 46px;
+/* Bell button */
+.banner-bell-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+.banner-bell-btn:hover { opacity: 1; }
+
+/* User pill — matches screenshot */
+.banner-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 50px;
+  padding: 6px 14px 6px 6px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  transition: background 0.15s;
+}
+.banner-user-pill:hover { background: rgba(255,255,255,0.26); }
+
+.banner-user-avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  background: #FFD700;
+  color: #7a0000;
+  font-size: 15px;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #F5A623;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 4px rgba(255,255,255,0.2);
-  transition: transform 0.2s;
+  flex-shrink: 0;
 }
 
-.deity-circle:hover { transform: scale(1.1); }
+.banner-user-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
 
-.deity-icon { font-size: 22px; }
+/* Dropdown */
+.banner-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 500;
+}
+
+.banner-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.banner-dd-item:hover { background: #f5f0ea; color: #8B0000; }
+.banner-dd-logout { border-top: 1px solid #eee; color: #c0392b; }
+.banner-dd-logout:hover { background: #fff5f5; }
+
+/* ── Torana — marigold garland with banana plant ends ────────────────────── */
+.nats-torana {
+  width: 100%;
+  height: 90px;
+  margin: 0;
+  display: block;
+  background:
+    url('https://www.natsworld.org/Content/User/images/arati-thoranam-left.png')  left top / auto 90px no-repeat,
+    url('https://www.natsworld.org/Content/User/images/arati-thoranam-right.png') right top / auto 90px no-repeat,
+    url('https://www.natsworld.org/Content/User/images/thoranam-bg.png')           center top / auto 68px repeat-x;
+}
+
+@media (max-width: 768px) {
+  .banner-title-en  { font-size: 18px; letter-spacing: 1px; }
+  .banner-title-te  { font-size: 15px; }
+  .nats-logo-img    { width: 120px; }
+  .deity-photo-wrap { display: none; }
+  .nats-torana      { height: 60px; background-size: auto 60px, auto 60px, auto 36px; }
+}
 
 /* ============================================================================
-   TIER 3 — Main navigation  (white background)
+   TIER 3 — Main navigation
+   Matches live natsworld.org screenshot:
+     - White background, dark text
+     - Orange active link (#d45200 — real site anchor color)
+     - Gold hover (#ffc90c)
+     - Gold bottom border (#ffc90c)
    ============================================================================ */
 
 .nats-mainnav {
-  background: #FFFFFF;
-  border-bottom: 3px solid #8B0000;
+  background-color: #ffffff;
+  border-bottom: 3px solid #ffc90c;
   position: sticky;
   top: 0;
   z-index: 200;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 .mainnav-inner {
@@ -362,7 +384,6 @@ a { text-decoration: none; color: inherit; }
   padding: 0 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .mainnav-links {
@@ -370,49 +391,74 @@ a { text-decoration: none; color: inherit; }
   list-style: none;
   gap: 0;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+.mainnav-links li {
+  position: relative;
 }
 
 .mainnav-links li a,
-.mainnav-links li .active,
 .mainnav-links li a:visited {
   display: block;
-  padding: 13px 14px;
-  font-size: 13px;
+  padding: 18px 15px;
+  font-size: 14px;
   font-weight: 700;
-  color: #7B1C1C;
-  letter-spacing: 0.4px;
+  color: #3a3a3a;                          /* dark charcoal — matches screenshot */
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.2s;
+  line-height: 1;
   border-bottom: 3px solid transparent;
   margin-bottom: -3px;
-  transition: color 0.2s, border-color 0.2s;
-  white-space: nowrap;
 }
 
-.mainnav-links li a:hover {
-  color: #F5A623;
-  border-bottom-color: #F5A623;
+.mainnav-links li a:hover,
+.mainnav-links li a:focus {
+  color: #d45200;                          /* orange — real site anchor hover */
+  border-bottom-color: #ffc90c;
 }
 
-/* Active page link */
+/* Active HOME link — orange, matching screenshot */
 .mainnav-links li a.active {
-  color: #F5A623;
-  border-bottom-color: #F5A623;
+  color: #d45200;                          /* orange active */
+  border-bottom-color: #ffc90c;
 }
 
-/* Matrimony link — highlighted */
-.mainnav-matrimony a,
+/* MATRIMONY — highlighted */
+.mainnav-matrimony a {
+  color: #8B0000 !important;
+}
+.mainnav-matrimony a:hover,
 .mainnav-matrimony a.active {
-  color: #8B0000 !important;
-  background: linear-gradient(180deg, #FFF8E1, #FFF3CD);
-  border: 1px solid #F5A623 !important;
-  border-bottom: 3px solid #F5A623 !important;
-  border-radius: 4px 4px 0 0;
-  margin: 4px 2px 0;
-  padding: 9px 14px !important;
+  color: #d45200 !important;
 }
 
-.mainnav-matrimony a:hover {
-  background: linear-gradient(180deg, #FFF3CD, #FFE082) !important;
-  color: #8B0000 !important;
+/* LOGIN — pushed to right, dark text */
+.mainnav-login-li {
+  margin-left: auto;
+}
+
+.mainnav-login-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+  padding: 18px 16px !important;
+  color: #3a3a3a !important;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: color 0.2s;
+}
+
+.mainnav-login-btn:hover,
+.mainnav-login-btn.active {
+  color: #d45200 !important;
+  border-bottom-color: #ffc90c;
 }
 
 /* Find Your Life Partner — navbar CTA button */
@@ -420,8 +466,8 @@ a { text-decoration: none; color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: linear-gradient(135deg, #FFD700 0%, #F5A623 70%, #E8941A 100%);
-  color: #3B1A00;
+  background: linear-gradient(135deg, #E87722 0%, #D4660F 100%);
+  color: #fff;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -430,15 +476,15 @@ a { text-decoration: none; color: inherit; }
   border-radius: 50px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.18), 0 1px 4px rgba(245,166,35,0.35);
+  box-shadow: 0 2px 10px rgba(232,119,34,0.35), 0 1px 4px rgba(0,0,0,0.15);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   flex-shrink: 0;
 }
 
 .nav-find-partner-btn:hover {
-  background: linear-gradient(135deg, #FFE033 0%, #F5A623 70%, #D4881A 100%);
+  background: linear-gradient(135deg, #F08530 0%, #C45A0A 100%);
   transform: translateY(-2px);
-  box-shadow: 0 5px 16px rgba(0,0,0,0.22), 0 2px 6px rgba(245,166,35,0.4);
+  box-shadow: 0 5px 16px rgba(232,119,34,0.45), 0 2px 6px rgba(0,0,0,0.18);
 }
 
 .nav-find-partner-btn:active {
@@ -707,7 +753,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .login-input::placeholder { color: #aaa; }
-.login-input:focus { border-color: #F5A623; }
+.login-input:focus { border-color: #E87722; }
 
 /* Error message */
 .login-error {
@@ -720,11 +766,11 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 12px;
 }
 
-/* Orange → red gradient LOGIN button */
+/* Orange → navy gradient LOGIN button */
 .login-submit-btn {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(to right, #F5A623, #c0392b);
+  background: linear-gradient(to right, #E87722, #1A3A8A);
   color: #fff;
   font-size: 17px;
   font-weight: 900;
@@ -824,8 +870,8 @@ a { text-decoration: none; color: inherit; }
 /* Outlined CREATE AN ACCOUNT button */
 .login-create-btn {
   background: transparent;
-  border: 2px solid #F5A623;
-  color: #F5A623;
+  border: 2px solid #E87722;
+  color: #E87722;
   padding: 10px 36px;
   border-radius: 30px;
   font-size: 13px;
@@ -837,7 +883,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .login-create-btn:hover {
-  background: #F5A623;
+  background: #E87722;
   color: #fff;
 }
 
@@ -1424,82 +1470,7 @@ a { text-decoration: none; color: inherit; }
   border-color: #F5A623;
 }
 
-/* ============================================================================
-   TIER 4 — Mango leaf torana  (dark green)
-   ============================================================================ */
-
-.nats-torana {
-  background: #1B5E20;
-  position: relative;
-  height: 52px;
-  overflow: hidden;
-}
-
-.torana-rope {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(90deg,
-    #E8941A 0%, #F5A623 15%, #FFD700 30%, #F5A623 45%,
-    #E8941A 60%, #F5A623 75%, #FFD700 90%, #E8941A 100%
-  );
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  z-index: 2;
-}
-
-.torana-leaves-row {
-  display: flex;
-  align-items: flex-start;
-  padding-top: 6px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.torana-leaf-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  min-width: 30px;
-  max-width: 48px;
-}
-
-.torana-knot {
-  width: 6px;
-  height: 6px;
-  background: #F5A623;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-  z-index: 3;
-}
-
-/* The mango leaf shape — elongated with rounded bottom */
-.torana-leaf {
-  width: 20px;
-  background: radial-gradient(ellipse at 40% 30%, #4CAF50 0%, #2E7D32 50%, #1B5E20 100%);
-  border-radius: 50% 50% 55% 55% / 20% 20% 80% 80%;
-  position: relative;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.35), inset -2px -2px 4px rgba(0,0,0,0.2);
-  margin-top: -1px;
-}
-
-/* Center vein */
-.torana-leaf::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 18%;
-  height: 62%;
-  width: 1px;
-  background: rgba(76, 175, 80, 0.7);
-  transform: translateX(-50%);
-}
+/* (torana styles live in the TIER 2 banner section above) */
 
 /* ============================================================================
    Sub-navigation  (matrimony section tabs, just below the sticky nav)
@@ -2182,57 +2153,129 @@ a { text-decoration: none; color: inherit; }
    Home page
    ============================================================================ */
 
+/* ============================================================================
+   Hero — full-screen, travel companion template
+   ============================================================================ */
+
 .home-hero {
-  background: linear-gradient(135deg, #8B0000 0%, #A00000 50%, #700000 100%);
-  color: #fff;
-  padding: 60px 32px;
+  min-height: 72vh;
+  background:
+    linear-gradient(rgba(60,0,0,0.60), rgba(30,0,0,0.72)),
+    url('https://images.pexels.com/photos/7669989/pexels-photo-7669989.jpeg?auto=compress&cs=tinysrgb&w=1920&fit=crop') center 30%/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  position: relative;
-  overflow: hidden;
+  padding: 48px 24px;
 }
 
-.home-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    45deg, transparent, transparent 60px,
-    rgba(245,166,35,0.05) 60px, rgba(245,166,35,0.05) 120px
-  );
+.hero-content {
+  max-width: 820px;
+  width: 100%;
 }
 
-.home-hero h2 {
-  font-size: 28px;
-  font-weight: 900;
-  margin-bottom: 12px;
-  text-shadow: 1px 2px 8px rgba(0,0,0,0.4);
-  position: relative;
-}
-
-.home-hero p {
-  font-size: 16px;
-  color: #FFD700;
-  margin-bottom: 32px;
-  position: relative;
-}
-
-/* Hero CTA button */
-.hero-find-partner-btn {
-  position: relative;
+/* Pill badge */
+.hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #FFD700 0%, #F5A623 60%, #E8941A 100%);
-  color: #3B1A00;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 16px 48px;
-  border: none;
+  gap: 8px;
+  background: rgba(255,201,12,0.12);
+  border: 1.5px solid #ffc90c;
+  color: #ffc90c;
+  padding: 6px 16px;
   border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* Split heading */
+.hero-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 14px;
+}
+
+.hero-white {
+  font-size: 48px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.hero-gold {
+  font-size: 58px;
+  font-weight: 900;
+  color: #ffc90c;
+  line-height: 1.1;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+/* Subtext */
+.hero-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.88);
+  max-width: 620px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+
+.hero-highlight {
+  color: #ffc90c;
+  font-weight: 700;
+}
+
+/* CTA buttons */
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-btn-gold {
+  background: #E87722;
+  color: #fff;
+  border: none;
+  padding: 16px 52px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.35), 0 2px 8px rgba(245,166,35,0.4);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: background 0.2s, transform 0.2s;
+  font-family: inherit;
+  box-shadow: 0 4px 20px rgba(232,119,34,0.4);
+}
+
+.hero-btn-gold:hover {
+  background: #D4660F;
+  transform: translateY(-2px);
+}
+
+.hero-btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.85);
+  padding: 16px 52px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  font-family: inherit;
+}
+
+.hero-btn-outline:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
 }
 
 /* ============================================================================
@@ -2433,15 +2476,6 @@ a { text-decoration: none; color: inherit; }
   border-color: #ddd !important;
 }
 
-.hero-find-partner-btn:hover {
-  background: linear-gradient(135deg, #FFE033 0%, #F5A623 60%, #D4881A 100%);
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(245,166,35,0.5);
-}
-
-.hero-find-partner-btn:active {
-  transform: translateY(0) scale(0.98);
-}
 
 .home-cards {
   display: grid;
@@ -2450,17 +2484,6 @@ a { text-decoration: none; color: inherit; }
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 32px;
-}
-
-@media (max-width: 700px) {
-  .home-cards { grid-template-columns: 1fr; }
-  .topbar-right, .topbar-left { display: none; }
-  .topbar-center { font-size: 12px; }
-  .banner-title-en { font-size: 16px; }
-  .banner-title-te { font-size: 12px; }
-  .nats-seal { width: 70px; height: 70px; }
-  .deity-grid { display: none; }
-  .mainnav-links li a { padding: 10px 8px; font-size: 11px; }
 }
 
 .home-card {
@@ -2492,6 +2515,44 @@ a { text-decoration: none; color: inherit; }
   font-size: 13px;
   color: #666;
   line-height: 1.5;
+}
+
+/* Stats strip */
+.home-stats-strip {
+  background: #8B0000;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 28px 32px;
+  flex-wrap: wrap;
+}
+
+.home-stat { text-align: center; }
+
+.home-stat-num {
+  font-size: 30px;
+  font-weight: 900;
+  color: #FFD700;
+}
+
+.home-stat-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 4px;
+}
+
+@media (max-width: 700px) {
+  .home-cards { grid-template-columns: 1fr; }
+  .home-stats-strip { gap: 32px; }
+  .mainnav-links li a { padding: 10px 8px; font-size: 11px; }
+}
+
+@media (max-width: 600px) {
+  .hero-white { font-size: 36px; }
+  .hero-gold  { font-size: 44px; }
+  .hero-sub   { font-size: 15px; }
+  .nats-header-inner { flex-direction: column; text-align: center; }
+  .nats-header-auth { justify-content: center; }
 }
 
 /* ============================================================================
@@ -2763,190 +2824,337 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ============================================================================
-   NATS Footer
+   NATS Footer — Travel Companion template style
    ============================================================================ */
 
-.nats-footer {
+.footer2 {
   margin-top: auto;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
-/* ── Main body (light gray) ─────────────────────────────────────────────────── */
-.footer-body {
-  background: #f0f0f0;
-  border-top: 4px solid #CC0000;
-  padding: 40px 20px;
+.footer2-body {
+  background: #ffffff;
+  border-top: 3px solid #E87722;
+  padding: 48px 24px 36px;
 }
 
-.footer-inner {
+.footer2-inner {
   max-width: 1280px;
   margin: 0 auto;
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 280px 1fr 1fr 220px;
   gap: 48px;
-  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
-/* ── Logo card ──────────────────────────────────────────────────────────────── */
-.footer-logo-card {
-  flex: 0 0 auto;
-  background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  padding: 20px 24px;
+/* ── Col 1: Brand ─────────────────────────────────────────────────────────── */
+.footer2-brand { display: flex; flex-direction: column; gap: 16px; }
+
+.footer2-logo-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 180px;
+  gap: 12px;
 }
 
-.footer-seal {
+.footer2-logo-img {
+  width: 72px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.footer2-brand-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  line-height: 1.2;
 }
 
-.footer-seal-arc-top {
-  font-size: 9px;
-  font-weight: 700;
-  color: #555;
-  letter-spacing: 0.3px;
-  text-align: center;
-}
-
-.footer-seal-nats {
-  font-size: 40px;
+.footer2-brand-name {
+  font-size: 22px;
   font-weight: 900;
-  color: #1a3a8a;
-  letter-spacing: 4px;
-  line-height: 1;
-  text-shadow: 1px 1px 0 #F5A623;
+  color: #111;
+  letter-spacing: 1px;
 }
 
-.footer-seal-te {
-  font-size: 10px;
+.footer2-brand-sub {
+  font-size: 15px;
+  font-weight: 700;
+  color: #E87722;
+}
+
+.footer2-brand-desc {
+  font-size: 13.5px;
   color: #555;
-  font-weight: 600;
-  text-align: center;
+  line-height: 1.65;
 }
 
-/* ── Quick Links ────────────────────────────────────────────────────────────── */
-.footer-links-block {
-  flex: 1;
-  min-width: 240px;
-}
-
-.footer-links-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: #222;
-  margin-bottom: 16px;
-  letter-spacing: 0.3px;
-}
-
-.footer-links-cols {
+.footer2-socials {
   display: flex;
-  gap: 40px;
-}
-
-.footer-links-col {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
   gap: 10px;
 }
 
-.footer-links-col a {
+.footer2-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.footer2-social:hover { opacity: 0.85; transform: translateY(-2px); }
+.footer2-social-fb { background: #1877F2; }
+.footer2-social-tw { background: #1DA1F2; }
+.footer2-social-yt { background: #FF0000; }
+
+/* ── Cols 2 & 3: Link columns ─────────────────────────────────────────────── */
+.footer2-col { display: flex; flex-direction: column; gap: 0; }
+
+.footer2-col-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: 1.2px;
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #E87722;
+}
+
+.footer2-link-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.footer2-link-item { border-bottom: 1px solid #f0f0f0; }
+
+.footer2-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 0;
   font-size: 14px;
   color: #444;
   text-decoration: none;
   transition: color 0.15s;
 }
 
-.footer-links-col a:hover {
-  color: #CC0000;
-  text-decoration: underline;
+.footer2-link:hover { color: #E87722; }
+
+.footer2-arrow {
+  color: #E87722;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
 }
 
-/* ── Subscribe + Social ─────────────────────────────────────────────────────── */
-.footer-subscribe-block {
-  flex: 0 0 auto;
+/* ── Col 4: Contact ───────────────────────────────────────────────────────── */
+.footer2-contact-row {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  min-width: 180px;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-.footer-subscribe-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.footer2-contact-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #E87722;
+  margin-top: 2px;
 }
 
-.footer-mailbox-icon {
-  color: #555;
+.footer2-contact-main {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.3;
 }
 
-.footer-subscribe-btn {
+.footer2-contact-sub {
+  font-size: 12px;
+  color: #666;
+}
+
+.footer2-contact-link {
+  font-size: 14px;
+  color: #1a3a8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer2-contact-link:hover { text-decoration: underline; }
+
+.footer2-donate-btn {
   display: inline-block;
-  background: #CC0000;
+  margin-top: 8px;
+  background: #E87722;
   color: #fff;
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 10px 20px;
-  border-radius: 4px;
+  letter-spacing: 0.8px;
+  padding: 11px 24px;
+  border-radius: 5px;
   text-decoration: none;
   transition: background 0.15s;
-  white-space: nowrap;
 }
 
-.footer-subscribe-btn:hover {
-  background: #a80000;
-}
+.footer2-donate-btn:hover { background: #D4660F; }
 
-.footer-social-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: #333;
-  text-align: center;
-}
-
-.footer-social-icons {
-  display: flex;
-  gap: 10px;
-}
-
-.footer-social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 4px;
-  color: #fff;
-  transition: opacity 0.15s, transform 0.15s;
-  text-decoration: none;
-}
-
-.footer-social-icon:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
-}
-
-.footer-social-fb { background: #1877F2; }
-.footer-social-tw { background: #1DA1F2; }
-.footer-social-yt { background: #FF0000; }
-
-/* ── Copyright bar (deep purple) ────────────────────────────────────────────── */
-.footer-copyright {
-  background: #2E1461;
-  color: rgba(255,255,255,0.85);
+/* ── Copyright bar ────────────────────────────────────────────────────────── */
+.footer2-copyright {
+  background: #111;
+  color: rgba(255,255,255,0.7);
   text-align: center;
   font-size: 13px;
   padding: 16px 20px;
   letter-spacing: 0.2px;
+}
+
+@media (max-width: 960px) {
+  .footer2-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer2-inner { grid-template-columns: 1fr; }
+}
+
+/* ============================================================================
+   NATS Matrimony Sub-navigation  (below the torana, logged-in pages only)
+   ============================================================================ */
+
+.matrimony-subnav {
+  background: #1a1a2e;
+  border-bottom: 3px solid #F5A623;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.subnav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.subnav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.subnav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.3px;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.subnav-link:hover {
+  color: #FFD700;
+  border-bottom-color: #FFD700;
+}
+
+.subnav-link--active {
+  color: #FFD700 !important;
+  border-bottom-color: #F5A623 !important;
+}
+
+.subnav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.subnav-user-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subnav-user-btn:hover {
+  background: rgba(255,255,255,0.14);
+  color: #FFD700;
+}
+
+.subnav-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.subnav-logout-btn:hover {
+  background: rgba(139,0,0,0.3);
+  color: #fff;
+  border-color: rgba(255,100,100,0.4);
+}
+
+/* Mainnav user link styling */
+.mainnav-user-li a,
+.mainnav-user-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px !important;
+  background: linear-gradient(180deg, #f9f3e6, #f5e9d0) !important;
+  border: 1px solid #d4b896 !important;
+  border-radius: 4px !important;
+  color: #5a2d00 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  margin: 4px 2px !important;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.mainnav-user-link:hover {
+  background: linear-gradient(180deg, #ffe9c8, #f5d8a8) !important;
+  color: #3B1A00 !important;
 }
 
 /* Make sure the page layout stretches footer to bottom */
@@ -2958,4 +3166,9 @@ a { text-decoration: none; color: inherit; }
 
 main {
   flex: 1;
+}
+
+/* Push content below the fixed subnav when logged in */
+.has-subnav main {
+  padding-top: 46px;
 }

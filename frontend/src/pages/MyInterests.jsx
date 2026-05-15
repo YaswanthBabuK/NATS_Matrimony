@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle, XCircle, Clock, CheckCircle2, Phone, Mail } from "lucide-react";
-import SubNav from "../components/SubNav";
+import { IconCheckCircle, IconXCircle, IconClock, IconCheckCircle2, IconPhone, IconMail } from "../icons";
 import { getInterestsSent, getInterestsReceived, updateInterest, resolvePhotoUrl } from "../data/api";
 
 // ─── Status pill ──────────────────────────────────────────────────────────────
 
 const StatusPill = ({ status }) => (
   <span className={`status-pill status-${status}`} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-    {status === "accepted" ? <><CheckCircle size={13} /> Accepted</> :
-     status === "rejected" ? <><XCircle size={13} /> Declined</> :
-     <><Clock size={13} /> Pending</>}
+    {status === "accepted" ? <><IconCheckCircle size={13} /> Accepted</> :
+     status === "rejected" ? <><IconXCircle size={13} /> Declined</> :
+     <><IconClock size={13} /> Pending</>}
   </span>
 );
 
@@ -21,12 +20,12 @@ function MutualMatchRow({ person }) {
     <tr style={{ background: "#d4edda" }}>
       <td colSpan={6} style={{ padding: "10px 16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <CheckCircle2 size={20} color="#155724" />
+          <IconCheckCircle2 size={20} color="#155724" />
           <div>
             <strong style={{ color: "#155724" }}>Mutual Match with {person.full_name}!</strong>
             <div style={{ fontSize: 12, color: "#155724", marginTop: 2 }}>
-              {person.phone && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Phone size={12} /> {person.phone}&nbsp;&nbsp;</span>}
-              {person.email && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Mail size={12} /> {person.email}</span>}
+              {person.phone && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconPhone size={12} /> {person.phone}&nbsp;&nbsp;</span>}
+              {person.email && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconMail size={12} /> {person.email}</span>}
               {!person.phone && !person.email && "Contact details not available"}
             </div>
           </div>
@@ -83,7 +82,6 @@ export default function MyInterests() {
 
   return (
     <>
-      <SubNav />
       <div className="page-banner">
         <h1>Interests</h1>
         <p>Manage your interest requests and responses</p>

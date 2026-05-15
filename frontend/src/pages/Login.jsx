@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CheckCircle, Clock, FlaskConical, User } from "lucide-react";
+import { IconCheckCircle, IconClock, IconFlask, IconUser } from "../icons";
 import {
   auth,
   googleProvider,
@@ -197,7 +197,7 @@ export default function Login() {
 
         {justRegistered && (
           <div className="login-success-banner" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <CheckCircle size={18} /> Registration complete! Sign in with your new account.
+            <IconCheckCircle size={18} /> Registration complete! Sign in with your new account.
           </div>
         )}
 
@@ -236,12 +236,12 @@ export default function Login() {
             {testAccountsLoad ? (
               <div className="login-test-accounts">
                 <p className="login-test-label" style={{ opacity: 0.6, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Clock size={14} /> Loading test accounts…
+                  <IconClock size={14} /> Loading test accounts…
                 </p>
               </div>
             ) : testAccounts.length > 0 && (
               <div className="login-test-accounts">
-                <p className="login-test-label" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><FlaskConical size={15} /> Try a test account</p>
+                <p className="login-test-label" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><IconFlask size={15} /> Try a test account</p>
                 <div className="login-test-btns">
                   {testAccounts.map((acc) => (
                     <button
@@ -251,7 +251,7 @@ export default function Login() {
                       onClick={() => fillTest(acc)}
                       style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
                     >
-                      <User size={14} /> {acc.label}
+                      <IconUser size={14} /> {acc.label}
                       <span className="login-test-email">{acc.email}</span>
                     </button>
                   ))}

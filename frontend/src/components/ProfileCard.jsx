@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Heart, MapPin, CheckCircle, Clock, XCircle, Mail } from "lucide-react";
+import { IconHeart, IconMapPin, IconCheckCircle, IconClock, IconXCircle, IconMail } from "../icons";
 import { addWishlist, removeWishlist, resolvePhotoUrl } from "../data/api";
 
 const maritalColor = {
@@ -57,21 +57,21 @@ export default function ProfileCard({
     if (interestStatus === "accepted") {
       return (
         <button className="card-interest-btn card-interest-accepted" disabled style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <CheckCircle size={14} /> Accepted
+          <IconCheckCircle size={14} /> Accepted
         </button>
       );
     }
     if (interestStatus === "pending") {
       return (
         <button className="card-interest-btn card-interest-pending" disabled style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <Clock size={14} /> Pending
+          <IconClock size={14} /> Pending
         </button>
       );
     }
     if (interestStatus === "rejected") {
       return (
         <button className="card-interest-btn card-interest-rejected" disabled style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <XCircle size={14} /> Declined
+          <IconXCircle size={14} /> Declined
         </button>
       );
     }
@@ -82,7 +82,7 @@ export default function ProfileCard({
         onClick={handleSendInterest}
         style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
       >
-        <Mail size={14} /> Send Interest
+        <IconMail size={14} /> Send Interest
       </button>
     );
   };
@@ -111,7 +111,7 @@ export default function ProfileCard({
             onClick={handleWishlist}
             title={wishlistId ? "Remove from wishlist" : "Add to wishlist"}
           >
-            <Heart size={16} fill={wishlistId ? "currentColor" : "none"} />
+            <IconHeart size={16} filled={wishlistId ? true : false} color={wishlistId ? "currentColor" : "currentColor"} />
           </button>
         )}
       </div>
@@ -140,7 +140,7 @@ export default function ProfileCard({
         )}
 
         {/* Location */}
-        <div className="card-location" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><MapPin size={13} /> {profile.current_city}, {profile.current_state}</div>
+        <div className="card-location" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><IconMapPin size={13} /> {profile.current_city}, {profile.current_state}</div>
 
         {profile.native_place && (
           <div className="card-native">From: {profile.native_place}</div>
